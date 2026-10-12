@@ -17,11 +17,14 @@
 | gemini-3.6-flash | Gemini API | 가능 | **미완료** (무료 한도) | 평가 안 함 | - | 하루 20건 제한 |
 | gemini-3.8-flash | Gemini API | 가능 | **미완료** (무료 한도) | 평가 안 함 | - | 하루 20건 제한 |
 | llama-3.2-90b-vision-instruct | NVIDIA API | 가능하나 매우 느림 | 미실행 | 평가 안 함 | - | 1건에 26분 |
-| nemotron-3-nano-omni-30b-a3b-reasoning | NVIDIA API | 불안정 | 미실행 | 평가 안 함 | - | 504 오류 |
+| nemotron-3-nano-omni-30b-a3b-reasoning | NVIDIA API | 불안정 | 미실행 | 평가 안 함 | - | 503/504 오류 (OpenRouter 경유는 아래 행) |
+| **nemotron-3-nano-omni (무료)** | OpenRouter | 가능 (간헐 502) | **무작위 45장만** (하루 50건 한도) | 0.333 / 0.200 | 0.412 | 41/45를 AGG0 예측, 이 표본의 항상 AGG0 기준선 0.378보다 낮음 |
+| gemma-4-31b-it (무료) | OpenRouter | 막힘 | 미실행 | 평가 안 함 | - | 상류(Google) 공용 풀 429 |
+| **gemini-3.5-flash-lite 타일 방식** | Gemini API | 가능 | (10x 60장, 타일 293/1,514개) | 평가 안 함 | **0.513** | `flat=true` 0건, 하루 한도로 중단 |
 
 기준선(항상 다수 클래스 AGG0 예측): accuracy 0.464 (179장), 0.467 (10x 60장).
 
-**요약**: 전체 사진 한 장을 넣는 방식은 모델 크기(0.8B, Gemini flash-lite, 대형 reasoning 모델 kimi-k3)와 프롬프트에 관계없이 거의 전부 한 클래스로 답했고, 심각도 점수의 AUROC도 0.5 근처였다. 신호가 나온 것은 JEVision에 224px 타일을 넣어 이미지 단위로 평균한 방식뿐이다(단, 조명 띠·스크래치 같은 아티팩트 오탐과 처리 조건 단서 가능성이 있음, README 5·6절).
+**요약**: 전체 사진 한 장을 넣는 방식은 모델 크기(0.8B, Gemini flash-lite, 대형 reasoning 모델 kimi-k3)와 프롬프트에 관계없이 거의 전부 한 클래스로 답했고, 심각도 점수의 AUROC도 0.5 근처였다. 신호가 나온 것은 JEVision에 224px 타일을 넣어 이미지 단위로 평균한 방식뿐이다(단, 조명 띠·스크래치 같은 아티팩트 오탐과 처리 조건 단서 가능성이 있음, README 5·6절). 타일 방식도 JEVision(AUROC 0.944)에서만 신호가 있었고, 같은 타일을 gemini-3.5-flash-lite에 넣었을 때는 편평한 부분이 있다고 답한 타일이 293개 중 0개였다(AUROC 0.513).
 
 ## 2. 공통 조건
 
@@ -91,6 +94,32 @@
 - 재측정(2026-10-12 09:46 KST, 텍스트 한 줄): **HTTP 503** `Worker local total request limit reached (16/16)`, 0.6초 만에 거절. 서버 워커의 동시 요청 한도가 가득 찬 상태로, 우리 쪽 요청 수와는 무관하다.
 - 실행하지 않았다.
 
+### 3.6 OpenRouter 무료 모델 (gemma-4-31b, nemotron-3-nano-omni)
+- 계정과 한도: 무료 모델은 분당 20건, 하루 50건(크레딧 구매 10 미만. 10 이상이면 하루 1,000건이라고 문서에 나옴)이다. 크레딧 5를 충전한 상태이고 API가 보고하는 무료 모델 하루 한도는 50건이다.
+- **키 종류 문제**: 처음 저장한 키가 관리(Management/Provisioning)용 키여서 채팅 호출이 401 `User not found`로 거절됐다(키 정보 조회 `/key`에서 `is_management_key: true`로 확인). 일반 API 키로 교체한 뒤 해결됐다. 모델 호출에는 일반 API 키를 써야 한다.
+- **gemma-4-31b-it:free / gemma-4-26b-a4b-it:free**: 호출마다 429 `temporarily rate-limited upstream`(`limit_source: upstream_provider_shared_pool`, 제공자 Google AI Studio). 모든 OpenRouter 무료 사용자가 나눠 쓰는 공용 풀이 가득 찬 상태이며 우리 계정 한도와는 무관하다. 15분 동안 30초 간격으로 확인했지만 풀리지 않아 **실행하지 못했다**.
+- 그 밖의 무료 후보: `nvidia/nemotron-nano-12b-v2-vl:free`는 모델 목록에 없었고, `thinkingmachines/inkling(-small):free`는 403(에이전트 도구에서만 사용 가능)이라 쓸 수 없었다.
+- **nemotron-3-nano-omni-30b-a3b-reasoning:free**: 제공자 NVIDIA. NVIDIA 자체 API에서는 503/504였지만 OpenRouter 경유로는 응답했다. 간헐적으로 NVIDIA 워커 한도(`16/16`)로 502가 나서 재시도하도록 했다.
+  - 설정: temperature 0, seed 0, max_tokens 4096, `response_format: json_object`. 원본 2.5MB 이미지가 그대로 받아들여졌다(입력 2,707토큰).
+  - 실행: 하루 50건 한도에 맞춰 **무작위 45장**(AGG0 17 / AGG1 13 / AGG2 15), 동시 호출 2개, 분당 12건. 오류 0건, `finish_reason` 전부 `stop`. 호출당 중앙값 7.5초(최대 145.9초), 출력 평균 270토큰(최대 1,657).
+  - 결과: accuracy 0.333, macro-F1 0.200.
+
+    | 정답＼예측 | AGG0 | AGG1 | AGG2 | recall |
+    |---|---|---|---|---|
+    | AGG0 (17) | 14 | 3 | 0 | 0.824 |
+    | AGG1 (13) | 12 | 1 | 0 | 0.077 |
+    | AGG2 (15) | 15 | 0 | 0 | 0.000 |
+
+    precision / recall / F1: AGG0 0.341 / 0.824 / 0.483, AGG1 0.250 / 0.077 / 0.118, AGG2 0 / 0 / 0. `severity` AUROC AGG2>AGG0 0.412, AGG1>AGG0 0.455, AGG2>AGG1 0.462(정답별 평균 0.059 / 0.038 / 0.000). 예측 분포는 AGG0 41, AGG1 4, AGG2 0.
+  - 해석: 앞의 전체 사진 결과와 같은 양상(거의 전부 AGG0)이다. 표본이 45장(AGG1 13장)이라 지표의 오차가 커서 방향만 볼 수 있다. 하루 한도 때문에 179장 전체는 하지 못했다.
+
+### 3.7 gemini-3.5-flash-lite 타일 방식 (Gemini API)
+- 설정: JEVision 타일 실험과 **같은 타일 1,514개**(10x 60장, `../preproc`의 선택 타일)와 같은 설명문·질문. JSON으로 `flat`(true/false)과 `probability`(0~1)를 받고 temperature 0. 타일 순서는 무작위(seed 0), 분당 13건, 동시 호출 3개. 하루 한도에 걸리면 재시도 없이 멈춘다.
+- 실행 범위: 타일 **293/1,514개(19%)** 처리(오류 3건은 하루 한도 정지, 복구까지 약 21시간). 무작위 순서라 60장 전부가 포함됐다(이미지당 중앙값 5타일, 최소 1·최대 9, 라벨 분포 AGG0 28 / AGG1 14 / AGG2 18).
+- 결과: **`flat=true`로 답한 타일이 0개**다. 확률은 거의 전부 0.05(272/293). AUROC `mean_p` AGG2>AGG0 0.513 / AGG1>AGG0 0.536 / AGG2>AGG1 0.480, `frac_flat`은 세 쌍 모두 0.500. 이미지 평균 확률은 AGG0 0.047 / AGG1 0.048 / AGG2 0.047이고, 처리 조건별 평균도 0.045~0.049로 같다.
+- 비교: 같은 타일·질문에서 JEVision `mean_flat`은 AUROC 0.944였다. gemini-3.5-flash-lite는 편평한 부분이 뚜렷하지 않으면 "없다"고 답하는 보수적인 답변을 했다. JEVision의 높은 점수에도 조명 띠·스크래치 같은 아티팩트가 섞여 있었으므로(`jev/README.md` 5절), 이 차이를 어느 모델이 더 정확하다는 뜻으로 읽을 수는 없다.
+- 한계: 19%만 처리했다. 다만 `flat=true`가 0건이라 나머지를 처리해도 같을 가능성이 높다(추정).
+
 ## 4. 알려진 한계와 주의
 
 - API 모델 결과는 모두 **한 번 실행**이다. 같은 입력에서 출력이 재현되는지는 확인하지 않았다(kimi-k3는 temperature 1, seed 0 지정).
@@ -99,6 +128,10 @@
 - 모델명과 지원 기능은 2026-10-12 시점 확인 결과이며, 무료 티어 한도와 호스팅 상태는 바뀔 수 있다.
 - Gemini, llama, nemotron은 평가 지표가 없으므로 위 표의 성능 비교에 넣을 수 없다.
 
+- OpenRouter 무료 모델은 상류 제공자의 공용 풀 한도에 영향을 받아, 우리 계정 한도와 무관하게 막힐 수 있다(gemma). 계정 쪽 한도는 하루 50건이라 179장 전체 실행에는 크레딧 10 이상 충전이 필요하다(결제는 사용자가 직접).
+- nemotron-omni(OpenRouter)는 45장 표본이라 다른 모델의 179장 결과와 지표를 직접 비교하기 어렵다(기준선도 0.378로 다름).
+- Gemini 타일 결과는 타일의 19%만 처리한 부분 결과다.
+
 ## 5. 다음 단계 후보
 
 1. kimi-k3에 타일 방식 적용(타일당 약 1분이라 일부 이미지·타일만 먼저).
@@ -106,15 +139,21 @@
 3. llama/nemotron은 서버 상태가 나아지면 소규모로 재시도.
 4. 조명 띠·스크래치를 무시하도록 프롬프트를 보강한 타일 프롬프트(JEVision).
 
+5. gemma-4-31b(OpenRouter 무료): 공용 풀이 풀리면 재시도. nemotron-omni는 크레딧 10 이상으로 올려 179장 전체로 확장.
+6. gemini-3.5-flash-lite 타일은 한도 복구 후 나머지 타일 처리(결과가 달라질지 확인).
+
 ## 6. 파일
 
 | 경로 | 내용 |
 |---|---|
-| `api/scripts/run_api.py` | Gemini/NVIDIA API 호출(재개 가능, 키는 `~/.agg_keys.env`에서 읽음) |
+| `api/scripts/run_api.py` | Gemini/NVIDIA/OpenRouter API 호출(재개 가능, 키는 `~/.agg_keys.env`에서 읽음) |
 | `eval_agg.py` | 공용 평가 스크립트(JEVision과 API 결과 모두 처리, 오류 행 제외, `severity` 점수 AUROC 포함) |
 | `api/results/api_kimi-k3.jsonl`, `api/results/metrics_api_kimi-k3.txt` | kimi-k3 이미지별 결과와 지표 |
 | `api/results/api_gemini-3.6-flash.jsonl`, `api/results/api_gemini-3.8-flash.jsonl` | Gemini 부분 결과(BASE만, 평가 안 함) |
 | `api/results/api_gemini-3.5-flash-lite.jsonl`, `api/results/api_gemini-3.1-flash-lite.jsonl` | flash-lite 이미지별 결과 (179줄) |
 | `api/results/metrics_api_gemini-3.5-flash-lite.txt`, `api/results/metrics_api_gemini-3.1-flash-lite.txt` | flash-lite 지표 원본 |
+| `api/scripts/run_tiles_api.py`, `api/scripts/agg_tiles_api.py` | Gemini 타일 방식 호출과 이미지 단위 집계 |
+| `api/results/api_nemotron-omni-or.jsonl`, `api/results/metrics_api_nemotron-omni-or.txt` | nemotron-omni(OpenRouter) 45장 결과와 지표 |
+| `api/results/tiles_api_gemini-3.5-flash-lite.jsonl`, `api/results/metrics_tiles_api_gemini-3.5-flash-lite.txt` | Gemini 타일 방식 결과(타일 293개)와 집계 |
 
-`run_api.py` 옵션: `--rpm`(분당 요청 수 제한), `--shuffle`(무작위 순서), 하루 한도(429에 대기 5분 초과)가 나오면 재시도 없이 중단. 재개 시 성공한 행만 건너뛴다.
+`run_api.py` 옵션: `--rpm`(분당 요청 수 제한), `--shuffle`(무작위 순서), 하루 한도(429에 대기 5분 초과)가 나오면 재시도 없이 중단. 재개 시 성공한 행만 건너뛴다. `--provider openrouter`를 추가했고, 서버가 응답 본문에 담아 보내는 일시 오류(502 등)는 재시도한다.
