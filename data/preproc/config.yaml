@@ -1,0 +1,55 @@
+# 전처리 설정 (명세 v0.1). 모든 스크립트가 이 파일 하나에서 파라미터를 읽는다 (하드코딩 금지).
+# 확정된 항목: 10x만 사용, 마스크 otsu_v, 스케일바 제외 구역, 타일 조합 B(아래 tiling). 나머지 후보값은 주석 참조.
+# 상대경로는 이 config 파일이 있는 폴더(preproc/) 기준.
+paths:
+  image_root: ".."                     # AGG_labeled_only (이미지, 읽기 전용; s00a만 6장 파일명 변경)
+  original_root: "../.."               # 원본 마스터 폴더 (읽기 전용, 비교용)
+  outputs_dir: "outputs"
+  overrides_dir: "overrides"
+
+naming:
+  fixed_marker: "(수정함)"             # 파일명 수정한 이미지 표시
+  known_mags: ["7.5", "10", "12.5"]
+  expected_resolution: [1824, 1368]    # (w, h)
+  expected_mags_per_group: 3
+  meta_tol_rel: 0.03                   # s00b: 메타 FOV가 배율 기준값과 이 비율 이내면 같은 배율로 간주 (초기 후보, 분포 확인 후 조정)
+
+experiment:
+  use_mags: ["10"]                     # 1차 실험은 10x만
+
+# --- 아래는 s01 이후 단계용 (아직 사용 안 함) ---
+scalebar:
+  exclude_box: [1670, 1277, 1824, 1368]   # s01 측정값(10x): 모델 박스 [1686,1293,1813,1359] + margin 16, 이미지 경계로 clip. (x0, y0, x1, y1)
+  extra_margin_px: 16                  # s01 제외 구역에 더하는 여유 마진 (초기 후보)
+  nominal_bar_mm: [0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 2.5, 5.0]   # 막대 눈금 값 후보 (이미지마다 다름; 근거 범례로 눈 확인)
+
+mask:
+  method: otsu_v                       # 확정(사용자 결정 2026-10-11): 기본 방법 otsu_v. 후보: otsu_s(배경 누출), otsu_sv, hue_sv(밝은 가장자리 띠를 잘라냄: s03b), manual_*. 사용자 결정(2026-10-11): 이미지별 override 없이 전 이미지 otsu_v 만 사용 (수동 처리 안 함). 예전 override 2건은 overrides/_disabled/ 에 보관(비활성)
+  blur_ksize: 7                        # GaussianBlur 커널 (홀수)
+  close_px: 21                         # 모폴로지 닫기 커널 지름
+  open_px: 25                          # 모폴로지 열기 커널 지름 (9 -> 25: 둘레의 얇은 돌기 제거)
+  hue:                                 # hue_sv 방법: H in [h_lo,h_hi] & S>=s & V>=v. s03a 패치 측정: 시편 H 101~115, S>=29, V>=78 / 배경 S<=50, H 무작위
+    {h_lo: 98, h_hi: 120, s: 30, v: 65}
+  manual_candidates:                   # 수동 후보: 채도 S>=s 그리고 명도 V>=v (OpenCV 0-255)
+    - {name: manual_s40_v50, s: 40, v: 50}
+    - {name: manual_s60_v60, s: 60, v: 60}
+    - {name: manual_s80_v70, s: 80, v: 70}
+  min_iou_agree: 0.90                  # 방법들 사이 IoU 가 이보다 낮으면 의심으로 표시
+  area_ratio_outlier_iqr: 1.5          # 면적 비율 이상치 기준 (IQR 배수)
+
+tiling:
+  # 최종 조합 B' (사용자 결정 2026-10-12): 격자 stride 112, 마진 32, 타일 224,
+  #   선택 = 겹치지 않는 부분 격자 중 valid 가 가장 많은 오프셋 (nonoverlap_best_phase), 상한 없음.
+  #   (상한 20 을 씌우면 이미지당 약 5개가 빠져 빈 공간이 24%로 늘고, 상한 없이도 타일 비율이 이미지 비율과 거의 같아 상한이 불필요 -> null)
+  # 이전에 시도한 조합(삭제됨, 결과 수치는 README 11절): 탐색 6개 조합, 겹치는 B(stride 112 + 무작위 상한 40), 겹치지 않음 + 상한 20
+  tile_size: [224]                     # 112는 나중에 추가 가능 (구조만 열어둠)
+  stride: [112]                        # 격자 간격. nonoverlap_best_phase 는 tile_size == 2*stride 필요
+  erosion_margin_px: [32]              # 탐색 후보: [0, 32, 64]
+  selection_method: nonoverlap_best_phase   # 또는 random_seeded (valid 에서 seed 고정 무작위 비복원 추출; 타일끼리 겹치고 공간 분포가 고르지 않았음)
+  cap_per_image: null                  # 이미지당 최대 선택 타일 수 (null 이면 상한 없음). 부분 격자 크기가 상한 이하면 전부 선택
+                                       # nonoverlap_best_phase: 상한 초과 시 서로 가장 멀리 떨어진 타일부터 선택 (결정적, seed 불필요)
+  grid_origin: top_left                # 격자는 (0,0)에서 시작, 오른쪽/아래의 남는 픽셀은 쓰지 않음
+  erode_frame_as_boundary: false       # false: 이미지 프레임은 시편 경계로 보지 않음(프레임 변에서 침식 안 함). 타일이 프레임 안인지는 따로 확인
+  qc_overlay_images_per_class: 1       # 격자 overlay PNG 는 클래스별 샘플에 한해 저장
+
+seed: 0
