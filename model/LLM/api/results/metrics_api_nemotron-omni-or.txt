@@ -1,0 +1,38 @@
+== ALL  n=45  acc=0.333
+true/pred  AGG0  AGG1  AGG2   recall
+AGG0        14     3     0   0.824 (17)
+AGG1        12     1     0   0.077 (13)
+AGG2        15     0     0   0.000 (15)
+  AGG0: precision=0.341 recall=0.824 f1=0.483
+  AGG1: precision=0.250 recall=0.077 f1=0.118
+  AGG2: precision=0.000 recall=0.000 f1=0.000
+  macro-F1=0.200
+
+-- accuracy by mag
+  10         0.333 (n=15)
+  12.5       0.375 (n=16)
+  7.5        0.286 (n=14)
+
+-- accuracy by metal
+  BASE       0.286 (n=7)
+  BASE-LC    0.000 (n=5)
+  BASE-LCSI  0.625 (n=8)
+  BASE-LSi   0.400 (n=10)
+  REF        0.000 (n=5)
+  REF-LN     0.400 (n=10)
+
+-- accuracy by condition
+  NPH1035      0.000 (n=6)
+  NPH1050      0.000 (n=5)
+  PH1180-1035  0.000 (n=6)
+  PH1180-1050  0.000 (n=3)
+  PH1205-1035  1.000 (n=6)
+  PH1205-1050  0.143 (n=7)
+  PH1230-1035  1.000 (n=3)
+  PH1230-1050  0.000 (n=1)
+  PH1255-1035  0.600 (n=5)
+  PH1255-1050  0.667 (n=3)
+
+AUROC of model severity score: AGG2>AGG0 0.412 | AGG1>AGG0 0.455 | AGG2>AGG1 0.462
+mean severity by true label: {'AGG0': 0.059, 'AGG1': 0.038, 'AGG2': 0.0}
+pred distribution: {'AGG0': 41, 'AGG1': 4}

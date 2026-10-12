@@ -1,0 +1,26 @@
+tiles ok=293 errors=3 (e.g. RuntimeError: DAILY_QUOTA: retry in 76037s)
+images=60 | tiles per image: min 1 median 5.0 max 9
+images per label: {'AGG0': 28, 'AGG1': 14, 'AGG2': 18}
+AUROC mean_p   : AGG2>AGG0 0.513 | AGG1>AGG0 0.536 | AGG2>AGG1 0.480
+AUROC frac_flat: AGG2>AGG0 0.500 | AGG1>AGG0 0.500 | AGG2>AGG1 0.500
+
+image-level mean score by true label:
+  AGG0 (n=28): mean_p=0.047 frac_flat=0.000
+  AGG1 (n=14): mean_p=0.048 frac_flat=0.000
+  AGG2 (n=18): mean_p=0.047 frac_flat=0.000
+
+tile-level: flat=True rate by image label: {'AGG0': 0.0, 'AGG1': 0.0, 'AGG2': 0.0}
+tile-level mean p by image label: {'AGG0': 0.047, 'AGG1': 0.048, 'AGG2': 0.047}
+tile p distribution: {0.05: 272, 0.01: 10, 0.02: 7, 0.0: 4}
+
+per-condition mean_p:
+  NPH1035      mean_p=0.048  labels={'AGG2': 6}
+  NPH1050      mean_p=0.049  labels={'AGG2': 6}
+  PH1180-1035  mean_p=0.048  labels={'AGG0': 1, 'AGG1': 5}
+  PH1180-1050  mean_p=0.046  labels={'AGG2': 5, 'AGG1': 1}
+  PH1205-1035  mean_p=0.049  labels={'AGG0': 6}
+  PH1205-1050  mean_p=0.047  labels={'AGG1': 4, 'AGG2': 1, 'AGG0': 1}
+  PH1230-1035  mean_p=0.047  labels={'AGG0': 6}
+  PH1230-1050  mean_p=0.049  labels={'AGG0': 2, 'AGG1': 4}
+  PH1255-1035  mean_p=0.047  labels={'AGG0': 6}
+  PH1255-1050  mean_p=0.045  labels={'AGG0': 6}
