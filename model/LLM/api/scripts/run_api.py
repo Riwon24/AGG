@@ -112,9 +112,36 @@ def call_nvidia(model, img_bytes, client, max_b64=0):
     u = j.get('usage', {})
     return ans, {'promptTokenCount': u.get('prompt_tokens'), 'candidatesTokenCount': u.get('completion_tokens'), 'thoughtsTokenCount': None, 'sent_bytes': len(img_bytes)}, ch.get('finish_reason')
 
+OR_URL = 'https://openrouter.ai/api/v1/chat/completions'
+OR_CFG = {'temperature': 0, 'seed': 0, 'max_tokens': 4096, 'response_format': {'type': 'json_object'}}
+
+def call_openrouter(model, img_bytes, client):
+    url = 'data:image/jpeg;base64,' + base64.b64encode(img_bytes).decode()
+    body = {'model': model, 'stream': False,
+            'messages': [{'role': 'user', 'content': [{'type': 'text', 'text': PROMPT}, {'type': 'image_url', 'image_url': {'url': url}}]}],
+            **OR_CFG}
+    for attempt in range(8):
+        r = client.post(OR_URL, headers={'Authorization': 'Bearer ' + os.environ['OPENROUTER_API_KEY']}, json=body, timeout=600)
+        if r.status_code == 429 and ('per-day' in r.text or 'per_day' in r.text or 'free-models-per-day' in r.text):
+            raise RuntimeError('DAILY_QUOTA: ' + r.text[:200])
+        if r.status_code in (429, 500, 502, 503, 504): time.sleep(min(10 * 2 ** attempt, 90)); continue
+        if r.status_code >= 400: raise RuntimeError(f'HTTP {r.status_code}: {r.text[:300]}')
+        j = r.json()
+        if 'error' in j and 'choices' not in j:
+            code = j['error'].get('code') if isinstance(j['error'], dict) else None
+            if code in (429, 500, 502, 503, 504) and attempt < 5:
+                time.sleep(min(10 * 2 ** attempt, 60)); continue
+            raise RuntimeError('API error: ' + json.dumps(j['error'])[:300])
+        break
+    else:
+        raise RuntimeError(f'gave up after retries: HTTP {r.status_code}')
+    ch = j['choices'][0]; text = ch['message'].get('content') or ''
+    ans = extract_json(text); u = j.get('usage', {})
+    return ans, {'promptTokenCount': u.get('prompt_tokens'), 'candidatesTokenCount': u.get('completion_tokens'), 'thoughtsTokenCount': None, 'sent_bytes': len(img_bytes)}, ch.get('finish_reason')
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--provider", default="gemini", choices=["gemini", "nvidia"])
+    ap.add_argument("--provider", default="gemini", choices=["gemini", "nvidia", "openrouter"])
     ap.add_argument("--model", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--limit", type=int, default=0)
@@ -152,7 +179,7 @@ def main():
         wait_slot()
         meta = parse(f); t = time.time()
         try:
-            ans, usage, fin = call_gemini(a.model, f.read_bytes(), client) if a.provider == "gemini" else call_nvidia(a.model, f.read_bytes(), client, a.max_b64)
+            ans, usage, fin = (call_gemini(a.model, f.read_bytes(), client) if a.provider == "gemini" else call_openrouter(a.model, f.read_bytes(), client) if a.provider == "openrouter" else call_nvidia(a.model, f.read_bytes(), client, a.max_b64))
             rec = {**meta, "pred": ans["label"], "score": ans.get("severity"), "evidence": ans.get("evidence"), "finish": fin,
                    "tokens_in": usage.get("promptTokenCount"), "tokens_out": usage.get("candidatesTokenCount"),
                    "tokens_think": usage.get("thoughtsTokenCount"), "sent_bytes": usage.get("sent_bytes"), "provider": a.provider, "sec": round(time.time() - t, 1),
