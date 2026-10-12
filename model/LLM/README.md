@@ -1,6 +1,6 @@
 # 모델별 LLM 테스트 현황 (AGG0/1/2 분류)
 
-> **이 저장소 사본에 대한 안내**: 스크립트는 `scripts/`에 있다(이 문서 6절의 `scripts/` 경로가 이 폴더). JEVision 결과 파일은 `jev/results/`에 있다. kimi-k3·Gemini의 이미지별 결과(`results/api_*.jsonl`)와 지표 텍스트는 이 저장소에 올리지 않았고 원본 작업 폴더(`AGG_labeled_only/llm_exp/results/`)에만 있다. 이미지 파일은 올리지 않았다.
+> **폴더 구조**: `jev/`는 로컬에서 돌린 JEVision(스크립트 `jev/scripts/`, 결과 `jev/results/`), `api/`는 API로 호출한 모델(kimi-k3, Gemini 등)의 스크립트(`api/scripts/`)와 결과(`api/results/`)다. 이미지 파일은 올리지 않았다. 문서 안의 `../preproc/`, `../exp/` 경로와 스크립트 안의 데이터 경로는 원본 작업 폴더(`AGG_labeled_only`) 기준이다.
 
 작성 시점: 2026-10-12. 같은 과제(`AGG_labeled_only` 이미지 179장을 AGG0/1/2로 zero-shot 분류)를 여러 모델로 시도한 결과를 한곳에 정리한다. 상세한 JEVision 결과와 한계는 [`jev/README.md`](jev/README.md).
 
@@ -26,9 +26,9 @@
 ## 2. 공통 조건
 
 - 데이터: 이미지 179장(1824x1368 JPEG, 장당 약 2.4MB). 라벨 AGG0 83 / AGG1 43 / AGG2 53. API 모델에는 **원본 JPEG를 그대로** 보냈다(리사이즈 없음).
-- 프롬프트(API 모델): 사용자 정의("이상 결정립 성장, 주변 질감과 다르게 편평한 부분이 있으면 AGG")를 반영한 v2와 같은 내용. JSON(`evidence`, `label`, `severity` 0~1)으로 답하게 했다. 프롬프트 전문은 `scripts/run_api.py`의 `PROMPT`.
+- 프롬프트(API 모델): 사용자 정의("이상 결정립 성장, 주변 질감과 다르게 편평한 부분이 있으면 AGG")를 반영한 v2와 같은 내용. JSON(`evidence`, `label`, `severity` 0~1)으로 답하게 했다. 프롬프트 전문은 `api/scripts/run_api.py`의 `PROMPT`.
 - JEVision은 선택지 확률을 직접 출력하므로 AUROC를 낼 수 있고, API 모델은 확률이 없어 `severity` 점수로 AUROC를 계산했다(모델이 스스로 말한 값이라 JEVision 확률과 같은 성격은 아님).
-- 평가는 `scripts/eval_agg.py` (혼동행렬, 클래스별 precision/recall/F1, 배율·금속·처리 조건별 정확도).
+- 평가는 `api/scripts/eval_agg.py` (혼동행렬, 클래스별 precision/recall/F1, 배율·금속·처리 조건별 정확도).
 
 ## 3. 모델별 상세
 
@@ -52,7 +52,7 @@
 
   precision / recall / F1: AGG0 0.453 / 0.928 / 0.609, AGG1 0.333 / 0.070 / 0.115, AGG2 0 / 0 / 0.
 - `severity` 점수: 정답별 평균 0.105 / 0.099 / 0.091(AGG0/1/2), AUROC AGG2>AGG0 0.531, AGG1>AGG0 0.462, AGG2>AGG1 0.559. 점수가 클래스를 구분하지 못한다.
-- 배율별 accuracy: 7.5x 0.483, 10x 0.417, 12.5x 0.441. 처리 조건별 accuracy는 해당 조건의 AGG0 비율을 따라간다(NPH 0.000, PH1230-1035 1.000 등, `results/metrics_api_kimi-k3.txt`).
+- 배율별 accuracy: 7.5x 0.483, 10x 0.417, 12.5x 0.441. 처리 조건별 accuracy는 해당 조건의 AGG0 비율을 따라간다(NPH 0.000, PH1230-1035 1.000 등, `api/results/metrics_api_kimi-k3.txt`).
 - 응답 설명(`evidence`)은 대체로 "균일한 미세 알갱이, 편평한 부분 없음"이었다.
 
 ### 3.3a gemini-3.5-flash-lite / gemini-3.1-flash-lite (Gemini API)
@@ -110,11 +110,11 @@
 
 | 경로 | 내용 |
 |---|---|
-| `scripts/run_api.py` | Gemini/NVIDIA API 호출(재개 가능, 키는 `~/.agg_keys.env`에서 읽음) |
-| `scripts/eval_agg.py` | 평가(오류 행 제외, `severity` 점수 AUROC 포함) |
-| `results/api_kimi-k3.jsonl`, `results/metrics_api_kimi-k3.txt` | kimi-k3 이미지별 결과와 지표 |
-| `results/api_gemini-3.6-flash.jsonl`, `results/api_gemini-3.8-flash.jsonl` | Gemini 부분 결과(BASE만, 평가 안 함) |
-| `results/api_gemini-3.5-flash-lite.jsonl`, `results/api_gemini-3.1-flash-lite.jsonl` | flash-lite 이미지별 결과 (179줄) |
-| `results/metrics_api_gemini-3.5-flash-lite.txt`, `results/metrics_api_gemini-3.1-flash-lite.txt` | flash-lite 지표 원본 |
+| `api/scripts/run_api.py` | Gemini/NVIDIA API 호출(재개 가능, 키는 `~/.agg_keys.env`에서 읽음) |
+| `api/scripts/eval_agg.py` | 평가(오류 행 제외, `severity` 점수 AUROC 포함) |
+| `api/results/api_kimi-k3.jsonl`, `api/results/metrics_api_kimi-k3.txt` | kimi-k3 이미지별 결과와 지표 |
+| `api/results/api_gemini-3.6-flash.jsonl`, `api/results/api_gemini-3.8-flash.jsonl` | Gemini 부분 결과(BASE만, 평가 안 함) |
+| `api/results/api_gemini-3.5-flash-lite.jsonl`, `api/results/api_gemini-3.1-flash-lite.jsonl` | flash-lite 이미지별 결과 (179줄) |
+| `api/results/metrics_api_gemini-3.5-flash-lite.txt`, `api/results/metrics_api_gemini-3.1-flash-lite.txt` | flash-lite 지표 원본 |
 
 `run_api.py` 옵션: `--rpm`(분당 요청 수 제한), `--shuffle`(무작위 순서), 하루 한도(429에 대기 5분 초과)가 나오면 재시도 없이 중단. 재개 시 성공한 행만 건너뛴다.
