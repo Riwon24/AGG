@@ -28,7 +28,7 @@
 - 데이터: 이미지 179장(1824x1368 JPEG, 장당 약 2.4MB). 라벨 AGG0 83 / AGG1 43 / AGG2 53. API 모델에는 **원본 JPEG를 그대로** 보냈다(리사이즈 없음).
 - 프롬프트(API 모델): 사용자 정의("이상 결정립 성장, 주변 질감과 다르게 편평한 부분이 있으면 AGG")를 반영한 v2와 같은 내용. JSON(`evidence`, `label`, `severity` 0~1)으로 답하게 했다. 프롬프트 전문은 `api/scripts/run_api.py`의 `PROMPT`.
 - JEVision은 선택지 확률을 직접 출력하므로 AUROC를 낼 수 있고, API 모델은 확률이 없어 `severity` 점수로 AUROC를 계산했다(모델이 스스로 말한 값이라 JEVision 확률과 같은 성격은 아님).
-- 평가는 `api/scripts/eval_agg.py` (혼동행렬, 클래스별 precision/recall/F1, 배율·금속·처리 조건별 정확도).
+- 평가는 `eval_agg.py`(이 폴더 바로 아래, `jev/`와 `api/` 결과 공용) (혼동행렬, 클래스별 precision/recall/F1, 배율·금속·처리 조건별 정확도).
 
 ## 3. 모델별 상세
 
@@ -111,7 +111,7 @@
 | 경로 | 내용 |
 |---|---|
 | `api/scripts/run_api.py` | Gemini/NVIDIA API 호출(재개 가능, 키는 `~/.agg_keys.env`에서 읽음) |
-| `api/scripts/eval_agg.py` | 평가(오류 행 제외, `severity` 점수 AUROC 포함) |
+| `eval_agg.py` | 공용 평가 스크립트(JEVision과 API 결과 모두 처리, 오류 행 제외, `severity` 점수 AUROC 포함) |
 | `api/results/api_kimi-k3.jsonl`, `api/results/metrics_api_kimi-k3.txt` | kimi-k3 이미지별 결과와 지표 |
 | `api/results/api_gemini-3.6-flash.jsonl`, `api/results/api_gemini-3.8-flash.jsonl` | Gemini 부분 결과(BASE만, 평가 안 함) |
 | `api/results/api_gemini-3.5-flash-lite.jsonl`, `api/results/api_gemini-3.1-flash-lite.jsonl` | flash-lite 이미지별 결과 (179줄) |

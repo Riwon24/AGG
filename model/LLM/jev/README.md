@@ -166,7 +166,7 @@ WSL2 Ubuntu 기준(스크립트 경로·모델 폴더는 `~/jevision_work/`를 �
 git clone https://huggingface.co/divyanshx11/JEVision ~/jevision_work/JEVision   # LFS 파일은 huggingface_hub로 받고 manifest의 SHA256과 대조
 export TORCH_DISABLE_NATIVE_JIT=1                       # WSL에 C 컴파일러가 없을 때(flash-linear-attention 미설치)
 python scripts/run_agg.py --prompt v1                   # 전체 사진 179장 -> results/zeroshot_v1.jsonl (v2도 동일)
-python scripts/eval_agg.py results/zeroshot_v1.jsonl    # 혼동행렬, 클래스별 지표, 배율·금속·조건별 정확도
+python ../eval_agg.py results/zeroshot_v1.jsonl    # 혼동행렬, 클래스별 지표, 배율·금속·조건별 정확도
 python scripts/run_tiles.py                             # 선택 타일 1,514개 -> results/tiles_v1.jsonl
 python scripts/agg_tiles.py results/tiles_v1.jsonl      # 이미지 단위 집계, AUROC, 임계값 3분류, 10x 비교
 python scripts/review_tiles.py                          # tile_review/ 시트 생성
@@ -176,7 +176,7 @@ python scripts/review_tiles.py                          # tile_review/ 시트 �
 
 | 경로 | 내용 |
 |---|---|
-| `scripts/run_agg.py`, `scripts/eval_agg.py` | 전체 사진 zero-shot 분류와 평가 (프롬프트 v1/v2는 `run_agg.py` 안) |
+| `scripts/run_agg.py`, `../eval_agg.py`(JEVision과 API 모델이 함께 쓰는 공용 평가 스크립트) | 전체 사진 zero-shot 분류와 평가 (프롬프트 v1/v2는 `run_agg.py` 안) |
 | `scripts/run_tiles.py`, `scripts/agg_tiles.py`, `scripts/review_tiles.py` | 타일 점수, 이미지 단위 집계·평가, 타일 확인 시트 |
 | `results/zeroshot_v1.jsonl`, `zeroshot_v2.jsonl` | 이미지별 예측·확률 (179줄) |
 | `results/tiles_v1.jsonl` | 타일별 `p_flat`, `extent` 확률 (1,514줄) |
