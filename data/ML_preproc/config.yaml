@@ -1,0 +1,35 @@
+# ML_preproc 설정. 모든 스크립트가 이 파일 하나에서 파라미터를 읽는다 (하드코딩 금지).
+# 상대경로는 이 config 파일이 있는 폴더(ML_preproc/) 기준.
+paths:
+  outputs_dir: "outputs"
+
+# 기존 preproc 파이프라인(읽기 전용으로만 사용): 이미지 루트, s02/s03 출력, 마스크 파라미터를 여기서 가져온다.
+# 이 PC 의 절대경로이므로 다른 PC 에서는 바꿔야 한다.
+preproc:
+  config: "C:/Users/admin/Downloads/260929_images_for_AGG - manual labeling/AGG_labeled_only/preproc/config.yaml"
+
+# 타일 (다음 단계에서 사용). 기존 preproc 는 32px 였고 사용자 결정(2026-10-15)으로 8px 로 줄임
+tiling:
+  erosion_margin_px: [8]
+
+# 픽셀별 점수 항 (감점 전용). 점수 = A + lambda_blue*(B-1) + lambda_prox*(P-1), 점수 > 0 이 시편.
+score_map:
+  sigma_v: 20                        # A = tanh((V - Otsu 임계값) / sigma_v), 밝기 (기존 otsu_v 와 같은 방향)
+  sigma_h: 8                         # B: 핵심부 색상 H 중앙값 중심 가우시안 폭 (OpenCV H 0~179)
+  s_lo: 10                           # B: 채도 문. S <= s_lo 이면 0, S >= s_hi 이면 1 (사이는 선형)
+  s_hi: 40
+  tau_px: 40                         # P = exp(-max(d - d0, 0)/tau), d = hue_sv 핵심부까지 거리 (px)
+  lambda_blue: 0.5                   # 파랑이 아닐수록 감점
+  lambda_prox: 1.5                   # 핵심부에서 멀수록 감점
+
+# 최종 시편 마스크. 이미지별로 baseline/plateau 를 고른다 (규칙은 모든 이미지에 동일).
+#   otsu_v 마스크 안쪽 V(명도) 중앙값 >= v_med_threshold 이면 plateau, 아니면 baseline.
+#   근거: 두 변형이 크게 다른 7장에서 어두운 쪽 V 중앙값은 104, 116 / 밝은 쪽은 152 이상 (117~151 구간에 이미지 없음).
+final_mask:
+  v_med_threshold: 135
+  variants:
+    baseline: {penalty_only: true}
+    plateau:  {penalty_only: true, prox_plateau_px: 50}   # d0 = 50: 핵심부에서 50px 까지 근접 감점 없음 (흰 띠 폭 약 40~50px 보존)
+  per_file: 6                        # 확인용 PNG 한 장에 넣을 이미지 수
+  cols: 3                            # 확인용 PNG 열 수
+  tile_w: 600
