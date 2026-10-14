@@ -8,9 +8,15 @@ paths:
 preproc:
   config: "C:/Users/admin/Downloads/260929_images_for_AGG - manual labeling/AGG_labeled_only/preproc/config.yaml"
 
-# 타일 (다음 단계에서 사용). 기존 preproc 는 32px 였고 사용자 결정(2026-10-15)으로 8px 로 줄임
+# 타일 좌표 (m02_tiles.py). 사용자 설계(2026-10-15): 224px 타일, stride 112px(50% 겹침),
+# 타일 안의 마스크 비율이 min_mask_frac 이상이면 선택. 마스크 침식 마진은 쓰지 않는다 (마진 8px 안은 폐기).
+# 패치 라벨은 없고 이미지 라벨(0/1/2)을 이미지 단위로 유지한다. 특징은 마스크 안쪽 픽셀만 쓴다 (특징 추출 단계에서 구현).
 tiling:
-  erosion_margin_px: [8]
+  tile_size: 224
+  stride: 112
+  min_mask_frac: 0.5
+  grid_origin: top_left              # 격자는 (0,0) 에서 시작, 오른쪽/아래 남는 픽셀은 쓰지 않음
+  qc_images_per_class: 1             # 격자 overlay PNG: 클래스별 마스크 면적 중앙값에 가까운 이미지 수
 
 # 픽셀별 점수 항 (감점 전용). 점수 = A + lambda_blue*(B-1) + lambda_prox*(P-1), 점수 > 0 이 시편.
 score_map:
