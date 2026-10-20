@@ -3,7 +3,7 @@
 10x 이미지 60장(AGG0 28 / AGG1 14 / AGG2 18)에서 시편 마스크 밖(배경) 픽셀을 무작위로 바꾼 증강 이미지를 만들고, 원본과 증강본에서 고정 DINOv2 ViT-B/14 특징을 뽑아 AGG0/1/2 분류 점수가 어떻게 달라지는지 본다.
 **모델은 학습하지 않는다** (DINOv2 고정, 분류기는 평균 특징 위의 로지스틱 회귀/kNN). 증강은 분류기 학습 행을 늘리는 역할만 한다.
 
-이 폴더에는 실험을 다시 돌리는 데 필요한 스크립트만 있다. 이미지, 마스크, 중간 산출물(`outputs/`), 확인용 스크립트(아래 6절)는 저장소에 없다.
+이 폴더에는 실험을 다시 돌리는 데 필요한 스크립트와 증강 검증 스크립트(b02)가 있다. 이미지, 마스크, 중간 산출물(`outputs/`), 일부 확인용 스크립트(b02b, b02c, b03c; 아래 6절)는 저장소에 없다.
 
 ## 1. 한눈에 보기
 
@@ -11,13 +11,14 @@
 |---|---|---|---|
 | b00 | `b00_check_inputs.py` | 입력 점검(마스크 60장, 격자 타일 9,900개, `tiles.csv` sha256, 마스크 비율 재계산, 기존 분할 파일)과 분석 타일 선택 규칙 점검 | `tile_selection.csv`, `selected_tile_ids.csv`, `inputs_sha256.csv` |
 | b01 | `b01_measure_background.py` | 이미지 60장의 배경(평균색, 저주파 변동, 중간 대역 질감, 미세 노이즈와 채널 공분산)을 측정해 증강용 풀을 만든다 (라벨 미사용) | `aug_params.json`, `bg_stats.csv` |
+| b02 | `b02_make_aug_images.py` | **증강을 검증하는 스크립트** (증강 구현은 `bg_common.augment_image`). 모든 이미지, 증강본, feather 후보에서 마스크 안쪽과 완충 띠 이내 픽셀이 원본과 완전히 같은지, 같은 시드로 다시 만들면 같은지 확인하고, 링 점검 지표와 확대 그림을 만든다. 증강 이미지는 저장하지 않고 다른 단계가 이 출력을 읽지도 않는다 | `ring_metrics.csv`, `fig_zoom_ring.png`, `fig_overview_k1.png` |
 | b03 | `b03_extract_features.py` | 원본(k=0)과 증강본(k=1..5)에서 격자 전체 타일의 DINOv2 특징(cls, patch 평균)을 뽑는다 (GPU) | `features.npz`, `tile_index.csv`, `meta.json` |
 | b04 | `b04_run_cv.py` | 이미지 단위 층화 5-fold x 10 반복, 설정 3개 x 팔 4개 실행 | `cv_predictions.csv`, `cv_summary.csv` |
 | b04b | `b04b_permutation.py` | primary 설정의 이미지 단위 라벨 순열 검사 20회 | `permutation_runs.csv` |
 | b05 | `b05_report.py` | 결과표, 부트스트랩 신뢰구간, 쌍 차이, 그림, 보고서 | `report.md`, `results_table.csv`, `paired_diff.csv`, `fig1~4.png` |
 
 공통: `bg_common.py`(config 읽기, 입력 로딩, 타일 선택, **배경 증강 함수 `augment_image`**), `config.yaml`(모든 파라미터), `run_wsl.sh`(WSL 가상환경으로 실행), `setup_env_wsl_bgaug.sh`(WSL 가상환경에 opencv 추가), `requirements_freeze_wsl.txt`.
-단계 번호가 b02, b03b 등으로 건너뛰는 것은 저장소에 올리지 않은 확인용 스크립트 때문이다 (6절).
+단계 번호가 b02b, b02c, b03c 로 건너뛰는 것은 저장소에 올리지 않은 확인용 스크립트 때문이다 (6절). b03 은 b01 의 출력(`aug_params.json`)을 읽고 b02 의 출력은 읽지 않는다.
 
 ## 2. 실행 환경과 선행 조건
 
@@ -35,6 +36,7 @@
 # Windows (PowerShell, 전처리용 가상환경의 python)           # 입력 점검, 배경 측정
 python b00_check_inputs.py
 python b01_measure_background.py
+python b02_make_aug_images.py                   # 증강 검증 (약 5분). 선택: b03 은 이 출력을 읽지 않는다
 
 # WSL (이 폴더에서)                                           # GPU 특징 추출, 교차검증, 순열 검사
 bash run_wsl.sh b03_extract_features.py        # 약 6~7분 (RTX 3060)
@@ -101,12 +103,12 @@ python b05_report.py
 | 타일 | m02 의 마스크 비율 >= 0.5 선택(7,921개) → 격자 전체(9,900개) → 겹치지 않는 부분 격자 + 시편 0 제외(2,591개) | 사용자 결정, 모두 b04 결과를 보기 전 |
 | 색 범위 | 증강 색 범위는 60장 배경 측정 풀에서 라벨 없이 뽑는다 | 사람이 손으로 값을 정하지 않음 |
 
-## 6. 저장소에 없는 확인용 스크립트 (로컬에만 있음)
+## 6. 검증 요약과 저장소에 없는 확인용 스크립트
 
-증강 검증과 그림 확인용이라 실험 재현에는 필요 없어서 올리지 않았다. 결과 요약만 적는다.
-- `b02`: 모든 이미지, 증강본, feather 후보에서 마스크 안쪽과 완충 띠 이내 픽셀이 원본과 uint8 로 완전히 같음 (300x2개 전부), 같은 시드로 다시 만들면 sha256 이 같음.
-- `b02b`: 60장 마스크/증강 확인 시트. `b02c`: 링 점검(거리별 평균 프로파일). `b03c`: 학습 타일 배치 그림.
-- `config.yaml` 의 `feather_candidates_px`, `ring_ratio_threshold`, `ring_z_threshold` 는 이 확인용 스크립트만 쓴다 (실험 스크립트는 `feather_px` 를 쓴다).
+- `b02` (저장소에 있음): 모든 이미지, 증강본, feather 후보에서 마스크 안쪽과 완충 띠 이내 픽셀이 원본과 uint8 로 완전히 같음 (300x2개 전부), 같은 시드로 다시 만들면 sha256 이 같음.
+- 링(증강에만 생기는 두 번째 경계) 점검: 처음 쓴 기울기 지표(`ring_ratio`, b02)는 노이즈 기울기에 묻혀 링을 못 잡았다. 노이즈를 평균으로 지운 거리별 평균 프로파일(`b02c`, 저장소에 없음)에서 밝기 급변 z>3 이 feather 0px 209/300 (70%), 16px 19/300 (6%).
+- 저장소에 없는 확인용 스크립트 (로컬에만 있음, 실험 재현에는 필요 없음): `b02b` (60장 마스크/증강 확인 시트), `b02c` (링 점검, 위), `b03c` (학습 타일 배치 그림).
+- `config.yaml` 의 `feather_candidates_px`, `ring_ratio_threshold` 는 b02 가, `ring_z_threshold` 는 저장소에 없는 `b02c` 만 쓴다 (실험 스크립트는 `feather_px` 를 쓴다).
 
 ## 7. 한계
 
