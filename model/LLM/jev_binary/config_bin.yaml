@@ -1,0 +1,36 @@
+# JEVision 타일 점수(model/LLM/jev/scripts/run_tiles.py 를 그대로 다시 실행한 결과)를 이진(AGG0+AGG1 vs AGG2)으로 평가하는 설정. 로컬 확인용 (저장소에 올리지 않음).
+# 상대경로는 이 config 파일이 있는 폴더(exp_jev/) 기준. 분류 기준만 바뀌고 JEVision 추론(프롬프트, 질문, 타일, 모델)은 run_tiles.py 와 같다.
+# 용어: 1단계 폴더 = 금속 종류(6), 2단계 폴더 = 처리 조건(10) = 처리 방법(5) x 온도(2)
+paths:
+  tiles_rerun: "outputs/jv01_binary_agg2/input/tiles_v1_rerun.jsonl"          # run_tiles.py 재실행 결과 (WSL ~/jevision_work/results/tiles_v1_rerun.jsonl 의 사본)
+  tiles_reference: ["C:/Users/<USER>/Downloads/AGG/model/LLM/jev/results/tiles_v1.jsonl", "/mnt/c/Users/<USER>/Downloads/AGG/model/LLM/jev/results/tiles_v1.jsonl"]   # 저장소의 기존 결과 (읽기 전용)
+  conditions_csv: "../exp/outputs/e00_make_splits/conditions.csv"             # 이미지 60장의 금속, 처리 조건, 처리 방법, 온도, 3분류 라벨 (읽기 전용)
+  splits_csv: "../exp/outputs/e00_make_splits/splits.csv"                     # 기존 이미지 단위 층화 5-fold x 10 반복 분할 (읽기 전용)
+  outputs_dir: "outputs/jv01_binary_agg2"
+
+data:
+  expected_images: 60
+  expected_tiles: 1514
+  positive_labels: [2]                                   # AGG2 -> 양성(1), AGG0 와 AGG1 -> 음성(0)
+  readme_auroc_mean_flat: {agg2_gt_agg0: 0.944, agg2_gt_agg1: 0.913}   # model/LLM/jev README 의 값 (재현 확인용)
+
+scores: [mean_flat, frac_flat]                          # 이미지 점수 = 타일 p_flat 의 평균(primary) 또는 p_flat > 0.5 인 타일의 비율(보조). jev/scripts/agg_tiles.py 와 같은 정의
+primary_score: mean_flat                                # 결과를 보기 전에 고정
+# 분류: 점수 >= 임계값 이면 AGG2(양성). 임계값 = 학습 이미지의 점수값 중 학습 accuracy 가 처음으로 최대가 되는 값 (학습 fold 이미지만 사용)
+
+cv:
+  n_splits: 5
+  n_repeats: 10
+  seed: 0
+
+bootstrap:
+  n: 2000
+  seed: 0
+
+permutation:
+  n_permutations: 20
+  seed: 0
+
+tile_repro_tolerance: 0.005                              # 재실행 p_flat 과 기존 p_flat 의 허용 차이 (소수 둘째 자리 반올림 값이라 같아야 한다)
+
+forbidden_terms: ["시편 종류"]
