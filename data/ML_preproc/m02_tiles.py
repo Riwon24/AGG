@@ -1,12 +1,12 @@
 """m02_tiles: m01 마스크로 타일 좌표를 계산한다 (10x 60장). 픽셀을 자르거나 저장하지 않고 좌표와 마스크 비율만 낸다.
 
-- 격자: tile_size x tile_size 타일을 stride 간격으로 (0,0) 에서 시작해 깐다 (224/112 -> 이미지당 15 x 11 = 165개). 겹침 50%.
+- 격자: tile_size x tile_size 타일을 stride 간격으로 (0,0) 에서 시작해 깐다 (224/224 -> 이미지당 8 x 6 = 48개, 겹침 없음. stride 112 이면 15 x 11 = 165개, 겹침 50%).
 - 마스크 비율 = 타일 안에서 마스크(m01 결과)에 속하는 픽셀의 비율. 스케일바 제외 구역 픽셀은 마스크에서 뺀다
   (m01 마스크는 60장 모두 이 구역과 겹치지 않으므로 보통 변화가 없고, 바뀌면 로그에 남긴다).
-- 선택 = 마스크 비율 >= min_mask_frac. 침식 마진은 쓰지 않는다.
+- 선택 = min_mask_frac 가 0 이면 타일 안에 마스크 픽셀이 1개 이상, 0 보다 크면 마스크 비율 >= min_mask_frac. 침식 마진은 쓰지 않는다.
 - 패치 라벨은 없다. label 열은 이미지 라벨(0/1/2)을 그대로 복사한 것이다. 분할은 이미지 단위로 해야 한다.
 - 특징 추출 단계에서는 마스크 안쪽 픽셀만 쓴다 (이 단계는 좌표와 비율만 만든다).
-산출: tiles.csv, tile_counts.csv, qc_grid_AGG<c>_*.png, log.txt
+산출 (outputs/<tiling.out_name>/, 기본 m02_tiles): tiles.csv, tile_counts.csv, qc_grid_AGG<c>_*.png, log.txt
 """
 import argparse
 import csv
@@ -51,11 +51,12 @@ def main():
     ex = pre["scalebar"]["exclude_box"]
     t, s, thr = int(tc["tile_size"]), int(tc["stride"]), float(tc["min_mask_frac"])
     assert tc["grid_origin"] == "top_left", "grid_origin 은 top_left 만 지원"
-    log = Logger(out, SCRIPT)
-    o = Path(out) / SCRIPT
+    onm = tc.get("out_name", SCRIPT)
+    log = Logger(out, onm)
+    o = Path(out) / onm
     m01 = Path(out) / "m01_masks"
     log("config:", cfg["_config_path"], "| preproc config:", pre["_config_path"])
-    log(f"tile={t} stride={s} (겹침 {100 * (1 - s / t):.0f}%) min_mask_frac={thr} | 스케일바 제외 구역={ex} | 마스크: {m01 / 'masks'}")
+    log(f"tile={t} stride={s} (겹침 {100 * (1 - s / t):.0f}%) min_mask_frac={thr}{' (마스크 픽셀 1개 이상)' if thr <= 0 else ''} | 스케일바 제외 구역={ex} | 마스크: {m01 / 'masks'}")
 
     sel = list(csv.DictReader(open(m01 / "selection.csv", encoding="utf-8-sig")))
     path_of = {r["image_id"]: r["path"] for r in csv.DictReader(open(Path(pre["paths"]["outputs_dir"]) / "s02_specimen_mask" / "mask_stats.csv", encoding="utf-8-sig"))}
@@ -83,7 +84,7 @@ def main():
                 inside = int(integ[y1, x1] - integ[y0, x1] - integ[y1, x0] + integ[y0, x0])
                 frac = inside / (t * t)
                 sb = int(x0 < ex[2] and x1 > ex[0] and y0 < ex[3] and y1 > ex[1])
-                cur.append((iid, r["label"], f"r{ri:02d}_c{ci:02d}", x0, y0, t, t, round(frac, 6), int(frac >= thr), sb, inside))
+                cur.append((iid, r["label"], f"r{ri:02d}_c{ci:02d}", x0, y0, t, t, round(frac, 6), int(inside > 0 if thr <= 0 else frac >= thr), sb, inside))
         # 적분 영상 검증: 무작위 타일 일부를 직접 합산해 비교
         for k in rng.choice(len(cur), size=min(4, len(cur)), replace=False):
             _, _, _, x0, y0, _, _, fr, _, _, px = cur[int(k)]
@@ -106,7 +107,7 @@ def main():
     # ---------- 가정 확인 ----------
     assert all(0 <= tl[3] and tl[3] + tl[5] <= W and 0 <= tl[4] and tl[4] + tl[6] <= H for tl in tiles), "타일이 이미지 범위 밖"
     assert all(c["n_selected"] > 0 for c in counts), "선택된 타일이 없는 이미지"
-    assert all(tl[8] == (1 if tl[10] / (t * t) >= thr else 0) for tl in tiles), "선택 규칙 불일치"
+    assert all(tl[8] == (1 if (tl[10] > 0 if thr <= 0 else tl[10] / (t * t) >= thr) else 0) for tl in tiles), "선택 규칙 불일치"
     assert len({(tl[0], tl[2]) for tl in tiles}) == len(tiles), "타일 ID 중복"
     log(f"\n[0] assert 통과: 타일이 이미지 범위 안, 이미지마다 선택 >= 1, 선택 규칙 일치, 타일 ID 중복 없음, 적분 영상 직접 합산 검증 {n_checked}개")
 
@@ -120,7 +121,7 @@ def main():
         log(f"    AGG{lab}: 이미지 {len(cc)}장, 선택 타일 {sum(c['n_selected'] for c in cc)}개 (이미지당 평균 {statistics.mean(c['n_selected'] for c in cc):.1f})")
     full = sum(c["n_full"] for c in counts)
     part = sum(c["n_partial_selected"] for c in counts)
-    log(f"[3] 선택 타일 중 마스크 100%인 타일 {tot_sel - part}개, 일부만 마스크({100 * thr:.0f}%~100% 미만, 임계값이 100% 이면 0개)인 타일 {part}개 ({100 * part / tot_sel:.1f}%)")
+    log(f"[3] 선택 타일 중 마스크 100%인 타일 {tot_sel - part}개, 일부만 마스크(0%~100% 미만 또는 임계값~100% 미만, 임계값이 100% 이면 0개)인 타일 {part}개 ({100 * part / tot_sel:.1f}%)")
     fr_sel = [tl[7] for tl in tiles if tl[8]]
     log(f"    선택 타일의 마스크 비율: median {statistics.median(fr_sel):.3f} min {min(fr_sel):.3f} | 비율 0.75 미만 {sum(1 for x in fr_sel if x < 0.75)}개, 0.75~1.0 미만 {sum(1 for x in fr_sel if 0.75 <= x < 1.0)}개")
     sb_sel = sum(c["n_scalebar_overlap_selected"] for c in counts)
