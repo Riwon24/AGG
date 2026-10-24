@@ -57,7 +57,7 @@
 
 선행 조건 (읽기 전용 입력, `config.yaml` 의 상대경로는 이 폴더를 로컬의 다른 폴더들과 같은 위치에 두었을 때의 값이라 이 저장소 배치에 맞춰 고쳐야 한다):
 - `data/preproc_2`: 증강 함수 `bg_common.py` 와 `config.yaml`, b01 이 만든 `aug_params.json` (`bgaug_config`, `bgaug_aug_params`)
-- `data/ML_preproc` 출력: 시편 마스크, `tiles.csv` (`g00` 이 읽음, sha256 앞 12자리 `eb9899d3d072`)
+- `data/ML_preproc` 출력: 시편 마스크, `tiles.csv` (`g00` 이 읽음, sha256 앞 12자리 `c645ee4f9630`)
 - `data/preproc` 출력: `s00b_meta_mag/manifest_v1.csv`, 10x 원본 이미지
 - `model/DL/DINOv2`(`exp_dir`: 모델 출처 해시, 기준선 예측), `model/DL/DINOv2_grid`(`exp_grid_dir`: 증강 없는 결과와 비교, 원본 특징 일치 확인)
 - DINOv2 공식 저장소와 가중치 (`~/.cache/torch/hub`)
@@ -81,7 +81,7 @@ python c01_compare_with_grid.py
 DINOv2_grid_augmentation/
 ├── config.yaml                  # 모든 파라미터 (하드코딩 금지)
 ├── common.py                    # config, 로그, 입력 로딩, 조건 파싱, 지표, 부트스트랩, 금지어 검사, 증강 특징 로딩
-├── g00_make_tile_list.py        # 격자 9,900개 -> 분석 타일 2,591개 (DINOv2_grid 와 같음)
+├── g00_make_tile_list.py        # 격자 2,880개(stride 224) -> 분석 타일 2,591개 (DINOv2_grid 와 같음)
 ├── e00_make_splits.py ... e05_sanity_permutation.py   # 실험 6단계 (e01, e03, e05 는 증강 판)
 ├── e06_extra_checks.py, e07_permutation_other_settings.py, e11_train_final.py   # 추가 확인, 순열 검사, 최종 모델
 ├── c01_compare_with_grid.py     # 증강 없음과의 쌍 비교, 기준선과의 쌍 비교
@@ -93,7 +93,7 @@ DINOv2_grid_augmentation/
 
 | 단계 | 하는 일 | 주요 출력 |
 |---|---|---|
-| `g00_make_tile_list` | `ML_preproc` 격자 9,900개에서 겹치지 않는 부분 격자 4개 중 시편 픽셀을 가장 많이 덮는 것을 이미지마다 고르고 시편 픽셀 0인 타일을 뺌 (DINOv2_grid 와 같은 선택, 목록 해시가 같음) | `tiles.csv` |
+| `g00_make_tile_list` | `ML_preproc` 격자(stride 224, 2,880개)에서 시편 픽셀 0인 타일을 뺌 (DINOv2_grid 와 같은 선택, 목록 해시가 같음) | `tiles.csv` |
 | `e00_make_splits` | 이미지 단위 층화 5-fold x 10 반복 분할 (seed 0) | `splits.csv` |
 | `e01_extract_features` | 원본과 배경 증강본 5개에서 타일 cls/patch 평균, 이미지 전체 cls 추출. 모델 출처, 정규화, 결정성, 시편 픽셀 불변, 원본 특징의 DINOv2_grid 일치를 검사 | `features.npz`, `meta.json` |
 | `e02_reference_baselines` | 다수 클래스, 처리 조건 다수 라벨 암기 기준선 | `baseline_metrics.csv` |

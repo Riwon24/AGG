@@ -15,6 +15,11 @@ import numpy as np
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
+from matplotlib import font_manager as _fm  # noqa: E402  (Windows 의 애플리케이션 제어 정책이 matplotlib 를 막으면 WSL 에서 실행: Windows 글꼴 파일을 경로로 등록)
+import os as _os  # noqa: E402
+for _f in ("C:/Windows/Fonts/malgun.ttf", "/mnt/c/Windows/Fonts/malgun.ttf"):
+    if _os.path.exists(_f):
+        _fm.fontManager.addfont(_f)
 
 from common import Logger, image_parts, load_config, load_image_table, metrics_from_confusion, sha256_file, write_csv  # noqa: E402
 
