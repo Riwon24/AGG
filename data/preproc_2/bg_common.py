@@ -101,7 +101,7 @@ def select_tiles(rows, tcfg):
 
 def inputs(cfg, extract=False):
     """이미지 표(60장, image_id 순)와 타일 목록.
-    extract=True : 특징 추출 대상(격자 전체 9,900개, (image_id, tile_id) 순). b03 이 이 전체에 대해 특징을 만든다.
+    extract=True : 특징 추출 대상(tiles.csv 의 격자 전체, (image_id, tile_id) 순). b03 이 이 전체에 대해 특징을 만든다.
     extract=False: 분석에 쓸 타일 (config tiles 의 select / drop_zero_mask 규칙으로 격자 전체의 부분집합을 고름)."""
     import csv
     cfg_exp = {"paths": {"tiles_csv": cfg["paths"]["tiles_csv"], "manifest_csv": cfg["paths"]["manifest_csv"],

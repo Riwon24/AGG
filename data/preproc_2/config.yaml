@@ -3,7 +3,7 @@
 # 용어: 1단계 폴더 = 금속 종류(6), 2단계 폴더 = 처리 조건(10) = 처리 방법(5) x 온도(2)
 paths:
   image_root: ".."                                       # AGG_labeled_only (이미지, 읽기 전용)
-  tiles_csv: ["C:/Users/<USER>/Downloads/AGG/data/ML_preproc/outputs/m02_tiles/tiles.csv", "/mnt/c/Users/<USER>/Downloads/AGG/data/ML_preproc/outputs/m02_tiles/tiles.csv"]
+  tiles_csv: ["C:/Users/<USER>/Downloads/AGG/data/ML_preproc/outputs/m02_tiles_s224/tiles.csv", "/mnt/c/Users/<USER>/Downloads/AGG/data/ML_preproc/outputs/m02_tiles_s224/tiles.csv"]
   masks_dir: ["C:/Users/<USER>/Downloads/AGG/data/ML_preproc/outputs/m01_masks/masks", "/mnt/c/Users/<USER>/Downloads/AGG/data/ML_preproc/outputs/m01_masks/masks"]
   manifest_csv: "../preproc/outputs/s00b_meta_mag/manifest_v1.csv"
   splits_csv: "../exp/outputs/e00_make_splits/splits.csv"   # 기존 실험의 이미지 단위 분할을 그대로 재사용 (읽기 전용)
@@ -14,17 +14,19 @@ paths:
   exp_dir: "../exp"                                      # 기존 실험 폴더 (출처 검증용 해시, 비교용 특징을 읽기 전용으로 사용)
 
 tiles:
-  # 특징 추출(b03)은 항상 격자 전체 9,900개(224px, stride 112)에 대해 한다. 아래는 b04 이후 분석에 쓸 타일 선택 규칙 (모든 이미지 동일, 라벨 무관).
-  select: nonoverlap_best_phase                         # 사용자 결정(2026-10-20): 겹치지 않게(stride 224 부분 격자 4개 중 시편 픽셀을 가장 많이 덮는 것), 배경은 포함하고 증강
-                                                        # all_grid = 격자 전체(50% 겹침) | selected = m02 의 mask_frac >= 0.5 (7,921개)
+  # ML_preproc 의 타일 좌표(m02_tiles_s224, 2026-10-24 부터)는 224px 타일을 stride 224 로 겹치지 않게 깐 격자(이미지당 48개, 2,880개)이다.
+  # 특징 추출(b03)은 이 격자 전체에 대해 하고, 분석(b04 이후)에는 그중 시편 픽셀이 있는 타일(2,591개)을 쓴다 (모든 이미지 동일, 라벨 무관).
+  # 이전 stride 112 격자(9,900개)에서는 select 가 nonoverlap_best_phase 였고 같은 타일(같은 이미지, x0, y0, mask_px)이 뽑혔다. tile_id 는 달라졌다 (격자 번호가 바뀜).
+  select: all_grid                                      # all_grid = 격자 전체 | selected = tiles.csv 의 selected==1 | nonoverlap_best_phase = stride 112 격자 파일용 (겹치지 않는 부분 격자 선택)
   drop_zero_mask: true                                  # 시편 픽셀이 0인 타일(mask_px == 0)은 뺀다
+  expect_non_overlap: true                              # 선택 타일끼리 겹치지 않는지 b00 이 모든 쌍을 검사한다
 
 data:
   expected_images: 60
-  expected_tiles: 9900                                  # 60 x 165 (특징 추출 대상 격자 전체)
-  expected_class_tiles: {0: 4620, 1: 2310, 2: 2970}
-  expected_tiles_by_mask: {full: 5597, partial: 3772, none: 531}   # 마스크 100% / 일부 / 0% (tiles.csv 의 mask_frac 기준)
-  tiles_sha256_prefix: "eb9899d3d072"                   # ML_preproc README 에 기록된 tiles.csv sha256 앞부분
+  expected_tiles: 2880                                  # 60 x 48 (stride 224 격자, 특징 추출 대상 격자 전체)
+  expected_class_tiles: {0: 1344, 1: 672, 2: 864}
+  expected_tiles_by_mask: {full: 1309, partial: 1282, none: 289}   # 마스크 100% / 일부 / 0% (tiles.csv 의 mask_frac 기준)
+  tiles_sha256_prefix: "c645ee4f9630"                   # ML_preproc README 에 기록된 tiles.csv sha256 앞부분
   expected_resolution: [1824, 1368]                     # (w, h)
   scalebar_exclude_box: [1670, 1277, 1824, 1368]        # x0, y0, x1, y1 (배경 측정에서만 제외, 증강은 마스크 밖이면 이 구역도 포함)
 

@@ -1,10 +1,11 @@
-"""b00: 입력 점검. 마스크 60장, 타일 9,900개(격자 전체) + 분석용 타일 선택 규칙 점검, tiles.csv sha256, 이미지 해상도, 마스크 비율 재계산, 기존 분할(e00) 파일을 확인한다.
+"""b00: 입력 점검. 마스크 60장, 타일 격자 전체(stride 224, 2,880개) + 분석용 타일 선택 규칙 점검, tiles.csv sha256, 이미지 해상도, 마스크 비율 재계산, 기존 분할(e00) 파일을 확인한다.
 
 모든 입력은 읽기 전용. 하나라도 어긋나면 assert 로 멈춘다. 출력: outputs/b00_check_inputs/log.txt, inputs_sha256.csv
 """
 import argparse
 import csv
 from collections import Counter
+from pathlib import Path
 
 import numpy as np
 
@@ -62,7 +63,7 @@ def main():
     exp_m = d["expected_tiles_by_mask"]
     assert (n_full, n_part, n_none) == (exp_m["full"], exp_m["partial"], exp_m["none"]), (n_full, n_part, n_none)
     log(f"타일 구성(마스크 비율): 100% {n_full}개 ({n_full / len(tiles) * 100:.1f}%), 일부 {n_part}개 ({n_part / len(tiles) * 100:.1f}%), 0%(순수 배경) {n_none}개 ({n_none / len(tiles) * 100:.1f}%) -> 기대와 일치")
-    log(f"  참고: 이전 선택(mask_frac >= 0.5)은 7,921개였고 이번에는 쓰지 않는다 (사용자 결정, 이 단계 결과를 보기 전)")
+    log("  참고: ML_preproc 의 이전 격자(stride 112, 9,900개)와 선택(mask_frac >= 0.5, 7,921개)은 쓰지 않는다 (stride 224 격자로 교체, 사용자 결정)")
     log(f"이미지 배경 비율(1-마스크 면적): 최소 {min(frac_bg):.3f}, 중앙값 {float(np.median(frac_bg)):.3f}, 최대 {max(frac_bg):.3f}")
 
     # ---------- 분석용 타일 선택 규칙 점검 ----------
@@ -77,13 +78,13 @@ def main():
     for iid in ids:
         g = sel_by[iid]
         assert all(int(x["mask_px"]) > 0 for x in g) or not cfg["tiles"].get("drop_zero_mask", False), "시편 픽셀 0인 타일이 남음"
-        if cfg["tiles"]["select"] == "nonoverlap_best_phase":      # 타일끼리 겹치지 않는지 모든 쌍 검사
+        if cfg["tiles"].get("expect_non_overlap", cfg["tiles"]["select"] == "nonoverlap_best_phase"):      # 타일끼리 겹치지 않는지 모든 쌍 검사
             xy = [(int(x["x0"]), int(x["y0"])) for x in g]
             for i in range(len(xy)):
                 for j in range(i + 1, len(xy)):
                     assert abs(xy[i][0] - xy[j][0]) >= 224 or abs(xy[i][1] - xy[j][1]) >= 224, f"타일이 겹침: {iid} {xy[i]} {xy[j]}"
         px = sum(int(x["mask_px"]) for x in g)
-        if cfg["tiles"]["select"] == "nonoverlap_best_phase":
+        if cfg["tiles"].get("expect_non_overlap", cfg["tiles"]["select"] == "nonoverlap_best_phase"):
             assert px <= spec_total[iid]
         covered += px
         rows_sel.append(dict(image_id=iid, n_tiles=len(g), specimen_px_in_tiles=px, specimen_px_total=spec_total[iid], specimen_cov=round(px / spec_total[iid], 4),
@@ -98,6 +99,7 @@ def main():
     if cfg["tiles"]["select"] == "nonoverlap_best_phase":
         ph = Counter(r["phase"] for r in rows_sel)
         log(f"  선택된 부분 격자(행 홀짝+열 홀짝): {dict(sorted(ph.items()))}")
+    if cfg["tiles"].get("expect_non_overlap", cfg["tiles"]["select"] == "nonoverlap_best_phase"):
         log("  검증 통과: 선택 타일끼리 겹치지 않음 (모든 쌍), 시편 픽셀 0인 타일 없음")
     write_csv(f"{log.dir}/selected_tile_ids.csv", [dict(image_id=x["image_id"], tile_id=x["tile_id"]) for x in sel])
     log(f"  선택 목록 sha256 {sha256_file(f'{log.dir}/selected_tile_ids.csv')}")
@@ -107,7 +109,7 @@ def main():
     assert len(sp) == 10 * 5 * 60, len(sp)
     sha_s = sha256_file(cfg["paths"]["splits_csv"])
     rows.append(dict(kind="splits", id="e00_make_splits/splits.csv", sha256=sha_s))
-    rows.append(dict(kind="tiles", id="m02_tiles/tiles.csv", sha256=sha_t))
+    rows.append(dict(kind="tiles", id=Path(cfg["paths"]["tiles_csv"]).parent.name + "/tiles.csv", sha256=sha_t))
     log(f"기존 분할(e00) {len(sp)}행(반복 10 x fold 5 x 이미지 60), 이미지 집합 일치, sha256 {sha_s}")
     write_csv(f"{log.dir}/inputs_sha256.csv", rows)
     log(f"\n점검 통과. 해시 {len(rows)}개를 inputs_sha256.csv 에 기록: {log.dir}")
