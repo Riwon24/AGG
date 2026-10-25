@@ -46,9 +46,19 @@
 | `b13_confusion_figure.py` | primary 의 혼동행렬 그림 (IMG, 반복 평균) |
 | `bcommon.py`, `config.yaml` | 공용 함수와 설정 |
 
-환경: Python, numpy, scikit-learn, matplotlib. GPU 는 필요 없다.
+환경: Python, numpy, scikit-learn, PyYAML, matplotlib. GPU 는 필요 없다.
 
-## 제약
+## 입력과 실행
 
-- 이 폴더의 코드는 저장소 안에서 그대로 실행되지 않는다. `bcommon.py` 가 `exp_group_cv/gcommon.py` 와 `exp/` 의 공용 코드를 import 하고, `config.yaml` 의 경로(`../exp/outputs/e00_make_splits`, `../exp_grid_aug/outputs` 등)는 로컬 작업 폴더 구조를 가정한다. 해당 폴더들은 이 저장소에 없다.
+이 폴더의 코드는 다른 폴더의 코드를 import 하지 않는다 (공용 함수는 `bcommon.py` 안에 있다). 다만 입력 파일 두 가지가 필요하고, 저장소에는 올라와 있지 않다(출력이라 올리지 않았다). `config.yaml` 의 경로는 후보 목록이라 아래 위치를 차례로 찾는다.
+
+| 입력 | 저장소 구조에서의 위치 | 만드는 법 |
+|---|---|---|
+| 이미지 조건표와 분할 (`conditions.csv`, `splits.csv`) | `../DINOv2/outputs/e00_make_splits/` | `model/DL/DINOv2` 의 `e00_make_splits.py` |
+| 타일 특징 (`features.npz`, `tile_index.csv`) | `../DINOv2_grid_augmentation/outputs/e01_extract_features/` | `model/DL/DINOv2_grid_augmentation` 의 파이프라인 (`g00` → `e00` → `e01`) |
+
+실행 순서는 `b10` → `b11` → `b12` (→ `b13`) 이고, 각 스크립트는 이 폴더에서 `python b10_run_binary_cv.py` 처럼 실행한다. 출력은 이 폴더의 `outputs/` 에 쓰이며 올리지 않았다.
+
+## 참고
+
 - 출력(예측, 표, 그림, 보고서)은 올리지 않았다.

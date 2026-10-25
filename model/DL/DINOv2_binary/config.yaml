@@ -2,9 +2,9 @@
 # 상대경로는 이 config 파일이 있는 폴더(exp_binary/) 기준.
 # 용어: 1단계 폴더 = 금속 종류(6), 2단계 폴더 = 처리 조건(10) = 처리 방법(5) x 온도(2)
 paths:
-  conditions_csv: "../exp/outputs/e00_make_splits/conditions.csv"        # 이미지 60장의 금속, 처리 조건, 처리 방법, 온도, 3분류 라벨 (읽기 전용)
-  splits_csv: "../exp/outputs/e00_make_splits/splits.csv"                # 이미지 단위 층화 5-fold x 10 반복 분할 (읽기 전용, 3분류 라벨로 층화된 분할을 그대로 씀)
-  aug_out: "../exp_grid_aug/outputs"                                     # DINOv2_grid_augmentation 의 특징 (읽기 전용)
+  conditions_csv: ["../exp/outputs/e00_make_splits/conditions.csv", "../DINOv2/outputs/e00_make_splits/conditions.csv"]        # 후보 경로(존재하는 첫 번째를 쓴다): 로컬 작업 폴더 구조 / 저장소 구조. 이미지 60장의 금속, 처리 조건, 처리 방법, 온도, 3분류 라벨 (읽기 전용)
+  splits_csv: ["../exp/outputs/e00_make_splits/splits.csv", "../DINOv2/outputs/e00_make_splits/splits.csv"]                # 이미지 단위 층화 5-fold x 10 반복 분할 (읽기 전용, 3분류 라벨로 층화된 분할을 그대로 씀)
+  aug_out: ["../exp_grid_aug/outputs", "../DINOv2_grid_augmentation/outputs"]                                     # DINOv2_grid_augmentation 의 특징 (읽기 전용)
   outputs_dir: "outputs"
 
 positive_labels: [1, 2]                                  # AGG1, AGG2 -> 양성(1), AGG0 -> 음성(0)
@@ -13,7 +13,7 @@ schemes:                                                # 평가 방식 3개: IM
   LOCO: condition
   LOMO: method
 
-# 설정 목록과 분류기는 DINOv2 실험과 같다 (exp/e03_run_cv.py 의 build_settings, 분류기 정의는 b10 에 이진 라벨용으로 같은 방식으로 다시 씀)
+# 설정 목록과 분류기는 DINOv2 실험과 같다 (build_settings 와 이진 라벨용 분류기는 bcommon.py 에 있다)
 experiment:
   features: [cls, cls+patchmean]
   aggregators: [mean, mean_std, max]

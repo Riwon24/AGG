@@ -17,10 +17,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
-import sys  # noqa: E402
-sys.path.insert(0, str(HERE.parent / "exp_group_cv"))
-from gcommon import Logger, load_images, write_csv  # noqa: E402
-from gcommon import load_config as _lc  # noqa: E402
+from bcommon import Logger, load_images, write_csv  # noqa: E402
+from bcommon import load_config as _lc  # noqa: E402
 
 SCRIPT = "b12_report"
 plt.rcParams["font.family"] = "Malgun Gothic"
