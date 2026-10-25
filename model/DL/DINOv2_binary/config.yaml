@@ -1,0 +1,39 @@
+# 이진분류 확인: DINOv2_grid_augmentation 의 라벨을 AGG0 (0) vs AGG1+AGG2 (1) 로 바꿔 학습하고 평가한다. 로컬 확인용 (저장소에 올리지 않음).
+# 상대경로는 이 config 파일이 있는 폴더(exp_binary/) 기준.
+# 용어: 1단계 폴더 = 금속 종류(6), 2단계 폴더 = 처리 조건(10) = 처리 방법(5) x 온도(2)
+paths:
+  conditions_csv: "../exp/outputs/e00_make_splits/conditions.csv"        # 이미지 60장의 금속, 처리 조건, 처리 방법, 온도, 3분류 라벨 (읽기 전용)
+  splits_csv: "../exp/outputs/e00_make_splits/splits.csv"                # 이미지 단위 층화 5-fold x 10 반복 분할 (읽기 전용, 3분류 라벨로 층화된 분할을 그대로 씀)
+  aug_out: "../exp_grid_aug/outputs"                                     # DINOv2_grid_augmentation 의 특징 (읽기 전용)
+  outputs_dir: "outputs"
+
+positive_labels: [1, 2]                                  # AGG1, AGG2 -> 양성(1), AGG0 -> 음성(0)
+
+schemes:                                                # 평가 방식 3개: IMG = 이미지 단위 분할(e00), LOCO = 처리 조건 1개 제외(10 fold), LOMO = 처리 방법 1개 제외(5 fold)
+  LOCO: condition
+  LOMO: method
+
+# 설정 목록과 분류기는 DINOv2 실험과 같다 (exp/e03_run_cv.py 의 build_settings, 분류기 정의는 b10 에 이진 라벨용으로 같은 방식으로 다시 씀)
+experiment:
+  features: [cls, cls+patchmean]
+  aggregators: [mean, mean_std, max]
+  classifiers: [logreg, knn]
+  logreg: {C: 1.0, class_weight: balanced, max_iter: 1000}
+  knn: {k: 5, metric: cosine, weights: distance}
+  sl_features: [cls, cls+patchmean]
+  whole_image_classifiers: [logreg, knn]
+  primary: {features: cls, aggregator: mean, classifier: logreg}      # 결과를 보기 전에 고정. 바꾸지 않는다
+
+aug:
+  seed: 0                                               # SL 에서 학습 타일마다 어느 버전을 쓸지 고르는 시드 기준
+
+permutation:
+  n_permutations: 20
+  seed: 0
+  settings: ["tiles|cls|mean|logreg", "whole_image|cls|logreg"]
+
+bootstrap:
+  n: 2000
+  seed: 0
+
+forbidden_terms: ["시편 종류"]
