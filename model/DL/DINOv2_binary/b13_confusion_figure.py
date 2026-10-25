@@ -1,4 +1,4 @@
-"""b13: 이진 분류(AGG0 vs AGG1+AGG2) primary 설정(cls, mean, logreg)의 혼동행렬 그림 (로컬 확인용, 저장소에는 올리지 않음).
+"""b13: 이진 분류(AGG0 vs AGG1+AGG2) primary 설정(cls, mean, logreg)의 혼동행렬 그림.
 
 b10 의 cv_bin_predictions.csv 에서 이미지 단위 층화 5-fold x 10 반복(scheme IMG) 예측을 읽어, 한 장에 실제 클래스별 비율(%)과 그 아래 괄호로 반복 10회 평균 이미지 수를 그린다
 (반복마다 60장이 한 번씩 test). 출력: outputs/b13_confusion_figure/fig_confusion_binary_primary.png, confusion_by_repeat.csv, log.txt

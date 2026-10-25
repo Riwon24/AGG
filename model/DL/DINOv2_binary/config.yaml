@@ -1,4 +1,4 @@
-# 이진분류 확인: DINOv2_grid_augmentation 의 라벨을 AGG0 (0) vs AGG1+AGG2 (1) 로 바꿔 학습하고 평가한다. 로컬 확인용 (저장소에 올리지 않음).
+# 이진분류 확인: DINOv2_grid_augmentation 의 라벨을 AGG0 (0) vs AGG1+AGG2 (1) 로 바꿔 학습하고 평가한다.
 # 상대경로는 이 config 파일이 있는 폴더(exp_binary/) 기준.
 # 용어: 1단계 폴더 = 금속 종류(6), 2단계 폴더 = 처리 조건(10) = 처리 방법(5) x 온도(2)
 paths:
