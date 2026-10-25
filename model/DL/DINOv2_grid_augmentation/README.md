@@ -86,10 +86,9 @@ DINOv2_grid_augmentation/
 ├── e06_extra_checks.py, e07_permutation_other_settings.py, e11_train_final.py   # 추가 확인, 순열 검사, 최종 모델
 ├── c01_compare_with_grid.py     # 증강 없음과의 쌍 비교, 기준선과의 쌍 비교
 ├── c02_confusion_figure.py      # primary 의 3분류 혼동행렬 그림
-├── c03_tile_aggsim.py ... c09_manual_prototype_sim.py   # 타일별 AGG 유사도 분석 (8.6절)
 ├── figures/                     # README 에 쓰는 혼동행렬 그림 (fig_confusion_primary_3class.png)
 ├── run_wsl.sh, run_pipeline_wsl.sh, requirements_freeze_wsl.txt
-└── outputs/<스크립트명>/         # 단계별 출력과 log.txt (g00, e00 ~ e07, e11_final_model, c01_compare_with_grid, c03 ~ c09)
+└── outputs/<스크립트명>/         # 단계별 출력과 log.txt (g00, e00 ~ e07, e11_final_model, c01_compare_with_grid, c02_confusion_figure)
 ```
 
 ## 7. 단계별 스크립트
@@ -108,13 +107,6 @@ DINOv2_grid_augmentation/
 | `e11_train_final` | primary 로 60장의 모든 버전(360행)을 학습한 최종 모델 저장, `--verify` 로 저장본 재예측이 같은지 확인 | `final_model.joblib`, `final_model_params.npz` |
 | `c01_compare_with_grid` | 증강 판과 증강 없음을 설정별로 쌍으로 비교, primary 를 기준선과 쌍으로 비교 (같은 재표본 2000회) | `paired_diff_vs_grid.csv`, `paired_diff_vs_baselines.csv`, `compare_report.md` |
 | `c02_confusion_figure` | primary 의 3분류 혼동행렬 그림 (반복 10회 평균, 비율과 장 수) | `fig_confusion_primary.png`, `confusion_by_repeat.csv` |
-| `c03_tile_aggsim` | (repeat, fold) 마다 train 타일의 AGG1+AGG2 prototype 을 만들어 모든 타일과의 코사인 유사도(aggsim) 계산 | `tile_aggsim.csv` |
-| `c04_aggsim_heatmap` | 클래스별 이미지의 타일 격자에 aggsim 을 색으로 칠해 원본 위에 겹침 (repeat 0, fold 0) | `fig_aggsim_overlay_*.png` |
-| `c05_aggsim_inner_distribution` | 안쪽(마스크 100%) 타일의 aggsim 클래스별 분포, 이미지 단위 AUROC | `stats_by_class.csv`, `auroc_pairs.csv` |
-| `c06_aggsim_agg1_heatmaps` | 실제 라벨 AGG1 이미지 14장의 aggsim 히트맵과 수동 표시용 템플릿 | `NN_*.png`, `agg_tile_labels_template.csv` |
-| `c07_agg1_tile_numbers` | AGG1 이미지 14장의 타일 번호 격자 (색 없음) | `NN_*.png` |
-| `c08_agg1_manual_labels` | 직접 표시한 AGG 타일 17개(코드 안의 목록)를 기록하고 검증 | `agg_tile_labels_filled.csv`, `agg_tiles_list.csv` |
-| `c09_manual_prototype_sim` | 17개 타일의 prototype 과 모든 타일의 유사도, 이미지 안 순위와 percentile (loo, loio 변형 포함) | `tile_sim_manual.csv` |
 
 설정(고정): logreg = 표준화(train 에서만 fit) + L2, C=1.0, balanced, max_iter=1000. kNN = k=5, cosine, 거리 가중, 표준화 없음. mean_std 의 표준편차는 ddof=0. SL = 타일 단위 logreg 후 이미지 안 타일 확률 평균.
 
@@ -210,23 +202,9 @@ accuracy (반복 10회 평균), 차이 = 배경 증강 학습 − 증강 없음.
   관찰: AGG1 의 정답률이 가장 낮고 AGG1 의 34% 가 AGG0 으로 간다. AGG0 과 AGG2 를 서로 혼동하는 경우는 거의 없다 (AGG0 → AGG2 1%, AGG2 → AGG0 0%). AGG1 은 14장뿐이라 한 장이 바뀌면 비율이 약 7%p 움직인다.
 - 최종 모델은 학습 60장의 모든 버전(360행)으로 학습했고 학습 데이터 accuracy 는 1.000 이지만 학습 데이터 값이라 성능이 아니다. 저장본을 다시 불러도 60장 예측이 학습 시점과 완전히 같다 (`--verify`).
 
-### 8.6 타일 AGG 유사도 (c03 ~ c09)
+### 8.6 타일 AGG 유사도
 
-이 폴더의 원본(k=0) 타일 cls 특징으로 타일마다 "AGG 와 얼마나 닮았나"를 코사인 유사도(aggsim)로 계산한 탐색 분석이다. 타일 라벨은 그 타일이 속한 이미지의 라벨을 복사한 것이라, 타일 안에 실제로 AGG 가 있는지는 라벨에 없다.
-
-**버전 1: AGG1+AGG2 이미지의 타일로 prototype 을 만든 경우 (`c03`, `c05`)**
-- (repeat, fold) 마다 train 이미지의 타일만으로 label 1 또는 2 인 타일 cls 의 평균을 prototype 으로 만들고, 모든 타일에 대해 코사인 유사도를 계산한다. test 타일의 값만 분석에 쓴다 (한 타일은 반복마다 한 번씩 test, 10 반복 평균).
-- 관찰: test 타일 aggsim 평균은 AGG0 0.778, AGG1 0.796, AGG2 0.812 (표준편차 약 0.07~0.08). 안쪽(마스크 100%) 타일 1,309개만 보면 AGG0 0.828, AGG1 0.844, AGG2 0.849 이고, 가장자리 타일은 클래스와 상관없이 안쪽보다 0.08~0.10 낮다. 안쪽 타일의 이미지 평균으로 본 클래스 분리 (이미지 단위 AUROC, 이미지 부트스트랩 95% CI): AGG1+2 대 AGG0 0.686 [0.542, 0.814], AGG1 대 AGG0 0.640 [0.450, 0.811], AGG2 대 AGG0 0.722 [0.572, 0.865], AGG2 대 AGG1 0.571 [0.333, 0.781].
-- 해석 (가능한 설명이며 확정이 아님): 클래스 순서대로 평균이 오르지만 분포가 크게 겹친다. aggsim 의 공간 패턴은 AGG 정도보다 타일이 시편 안쪽인지 가장자리인지에 더 크게 좌우될 가능성이 있다. 이 점수는 "AGG1+2 이미지의 평균 타일과 닮은 정도"이지 AGG 영역을 잰 값이 아니다.
-
-**버전 2: 직접 표시한 AGG 타일 17개로 prototype 을 만든 경우 (`c06` ~ `c09`)**
-- AGG1 이미지 14장에서 사람이 PPT 를 보고 "AGG 가 있다"고 표시한 타일 17개 (이미지당 1~2개, 목록은 `c08` 코드 안에 있다). AGG2 이미지는 표시하지 않았고, 표시하지 않은 타일에 AGG 가 없는지는 확인되지 않았다. 표시 중 3건은 타일 경계 부근이라고 적었고, 이름을 적은 타일만 AGG 타일로 두었다. 이 표시는 도메인 전문가의 검증을 거치지 않았다.
-- prototype 은 17개 타일 cls 의 평균이고 모든 2,591개 타일에 대해 유사도를 계산한다. 이미지 안 순위의 percentile (1.0 = 이미지 안 최상위, 무작위 기대 0.5) 로 본다.
-- **순환성 주의**: 17개 타일은 prototype 자체를 만든 타일이라 자기 자신과 닮은 정도가 부풀려진다. 그래서 자기 자신을 뺀 prototype (loo), 같은 이미지의 AGG 타일을 모두 뺀 prototype (loio) 을 함께 계산한다.
-- 관찰 (17개 AGG 타일의 이미지 안 percentile): 전체 prototype 평균 0.674 (상위 25% 이내 8/17), loo 0.565 (4/17), loio 0.606 (6/17). 무작위 기대는 평균 0.5, 상위 25% 이내 약 4.3개다. 안쪽 타일인 AGG 타일 9개를 안쪽 타일끼리만 비교하면 loo 평균 0.520 (2/9), loio 0.626 (3/9) 이고, 가장자리 타일인 AGG 타일 8개는 loo 평균 0.341 로 낮다.
-- 해석 (가능한 설명이며 확정이 아님): 부풀림을 제거하면 AGG 타일이 같은 이미지의 다른 타일보다 prototype 과 닮았다는 증거가 보이지 않는다. 다만 17개라 표본이 작고 percentile 의 CI 는 계산하지 않았다. AGG 타일이 DINOv2 cls 특징으로 다른 타일과 구분되지 않을 정도로 비슷한 것일 수도 있고, 표시가 AGG 를 타일 단위로 정확히 가리키지 못했을 수도 있다 (경계에 걸친 경우). 이 실험으로 둘을 가를 수 없다.
-
-**실행 제약**: `c03`, `c05` 는 이 폴더의 `outputs/` (e01 특징, g00 타일 목록, e00 분할)만 있으면 실행된다 (c05 는 c03 의 출력도 읽는다). `c04`, `c06`, `c07` 은 원본 이미지와 전처리 폴더의 `manifest_v1.csv` 를 읽는데 둘 다 저장소에 없다. `c08` 은 `c06` 이 만든 템플릿을, `c09` 는 `c08` 의 출력을 읽으므로 `c06` → `c08` → `c09` 순서가 필요하다. 출력(표, 그림)은 `figures/` 의 혼동행렬 그림 외에는 올리지 않았다.
+타일별 AGG 유사도(aggsim) 분석은 별도 폴더 `model/DL/DINOv2_aggsim` 으로 옮겼다. 그 폴더가 이 폴더의 특징(`outputs/e01_extract_features`)과 분할, 타일 목록을 읽어 쓰고, 스크립트(`c03` ~ `c09`)와 결과 설명도 그곳에 있다.
 
 ## 9. 한계
 

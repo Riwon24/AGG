@@ -27,7 +27,9 @@ plt.rcParams["font.family"] = "Malgun Gothic"
 plt.rcParams["axes.unicode_minus"] = False
 
 HERE = Path(__file__).resolve().parent
-OUT = HERE / "outputs"
+OUT = HERE / "outputs"                                  # 이 폴더의 결과 (c03 -> c04, c05, c06 -> c08 -> c09 가 서로의 출력을 읽는다)
+GRID = next((p for p in (HERE.parent / "exp_grid_aug" / "outputs", HERE.parent / "DINOv2_grid_augmentation" / "outputs") if p.exists()), HERE.parent / "DINOv2_grid_augmentation" / "outputs")
+#                                                       # 입력: DINOv2_grid_augmentation 의 출력 (읽기 전용; 로컬 작업 폴더 구조 또는 저장소 구조 중 있는 쪽)
 D = OUT / "c04_aggsim_heatmap"
 D.mkdir(parents=True, exist_ok=True)
 REPEAT, FOLD, T = 0, 0, 224
@@ -43,7 +45,7 @@ def log(m):
 rd = lambda p: list(csv.DictReader(open(p, encoding="utf-8-sig")))
 test_all = [r for r in rd(OUT / "c03_tile_aggsim/tile_aggsim.csv") if int(r["repeat"]) == REPEAT and int(r["fold"]) == FOLD and r["split"] == "test"]
 sim = [r for r in test_all if int(r["label"]) == LABEL]
-xy = {(r["image_id"], r["tile_id"]): (int(r["x0"]), int(r["y0"])) for r in rd(OUT / "e01_extract_features/tile_index.csv")}
+xy = {(r["image_id"], r["tile_id"]): (int(r["x0"]), int(r["y0"])) for r in rd(GRID / "e01_extract_features/tile_index.csv")}
 man = {r["image_id"]: r for r in rd(HERE.parent / "preproc/outputs/s00b_meta_mag/manifest_v1.csv")}
 by = {}
 for r in sim:

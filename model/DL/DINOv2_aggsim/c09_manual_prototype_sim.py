@@ -15,7 +15,9 @@ from pathlib import Path
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
-OUT = HERE / "outputs"
+OUT = HERE / "outputs"                                  # 이 폴더의 결과 (c03 -> c04, c05, c06 -> c08 -> c09 가 서로의 출력을 읽는다)
+GRID = next((p for p in (HERE.parent / "exp_grid_aug" / "outputs", HERE.parent / "DINOv2_grid_augmentation" / "outputs") if p.exists()), HERE.parent / "DINOv2_grid_augmentation" / "outputs")
+#                                                       # 입력: DINOv2_grid_augmentation 의 출력 (읽기 전용; 로컬 작업 폴더 구조 또는 저장소 구조 중 있는 쪽)
 D = OUT / "c09_manual_prototype_sim"
 D.mkdir(parents=True, exist_ok=True)
 lines = []
@@ -26,14 +28,14 @@ def log(m):
 
 
 rd = lambda p: list(csv.DictReader(open(p, encoding="utf-8-sig")))
-z = np.load(OUT / "e01_extract_features/features.npz")
+z = np.load(GRID / "e01_extract_features/features.npz")
 tile_cls, row_of = z["tile_cls"].astype(np.float64), z["tile_row_of"]
-tiles = rd(OUT / "e01_extract_features/tile_index.csv")
+tiles = rd(GRID / "e01_extract_features/tile_index.csv")
 X = tile_cls[row_of[:, 0]]                                       # 원본 (k=0)
 assert X.shape == (2591, 768) and len(tiles) == 2591
 key = [(t["image_id"], t["tile_id"]) for t in tiles]
 kidx = {k: i for i, k in enumerate(key)}
-mf = {(r["image_id"], r["tile_id"]): float(r["mask_frac"]) for r in rd(OUT / "g00_tile_list/tiles.csv")}
+mf = {(r["image_id"], r["tile_id"]): float(r["mask_frac"]) for r in rd(GRID / "g00_tile_list/tiles.csv")}
 lab = rd(OUT / "c08_agg1_manual_labels/agg_tile_labels_filled.csv")
 agg_keys = [(r["image_id"], r["tile_id"]) for r in lab if r["has_agg"] == "1"]
 assert len(agg_keys) == 17 and all(k in kidx for k in agg_keys)

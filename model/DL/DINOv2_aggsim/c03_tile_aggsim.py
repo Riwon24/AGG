@@ -1,6 +1,6 @@
 """c03: 타일별 AGG 유사도 점수.
 
-입력 (읽기 전용): outputs/e01_extract_features/features.npz, tile_index.csv, outputs/e00_make_splits/splits.csv (열: repeat, fold, image_id, label, role).
+입력 (읽기 전용): DINOv2_grid_augmentation/outputs/e01_extract_features/features.npz, tile_index.csv, DINOv2_grid_augmentation/outputs/e00_make_splits/splits.csv (열: repeat, fold, image_id, label, role).
 방식:
   1. 원본(k=0) 타일 cls 특징만 쓴다: tile_cls[tile_row_of[i, 0]] -> (2591, 768)
   2. splits.csv 의 이미지 단위 분할(repeat x fold)을 tile_index.csv 의 image_id 로 타일에 옮긴다 (한 이미지의 타일은 모두 같은 쪽).
@@ -17,7 +17,9 @@ from pathlib import Path
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
-OUT = HERE / "outputs"
+OUT = HERE / "outputs"                                  # 이 폴더의 결과 (c03 -> c04, c05, c06 -> c08 -> c09 가 서로의 출력을 읽는다)
+GRID = next((p for p in (HERE.parent / "exp_grid_aug" / "outputs", HERE.parent / "DINOv2_grid_augmentation" / "outputs") if p.exists()), HERE.parent / "DINOv2_grid_augmentation" / "outputs")
+#                                                       # 입력: DINOv2_grid_augmentation 의 출력 (읽기 전용; 로컬 작업 폴더 구조 또는 저장소 구조 중 있는 쪽)
 D = OUT / "c03_tile_aggsim"
 D.mkdir(parents=True, exist_ok=True)
 lines = []
@@ -27,16 +29,16 @@ def log(*a):
     m = " ".join(str(x) for x in a); print(m); lines.append(m)
 
 
-z = np.load(OUT / "e01_extract_features/features.npz")
+z = np.load(GRID / "e01_extract_features/features.npz")
 tile_cls, row_of = z["tile_cls"].astype(np.float64), z["tile_row_of"]
-tiles = list(csv.DictReader(open(OUT / "e01_extract_features/tile_index.csv", encoding="utf-8-sig")))
+tiles = list(csv.DictReader(open(GRID / "e01_extract_features/tile_index.csv", encoding="utf-8-sig")))
 assert row_of.shape[0] == len(tiles) == 2591
 X = tile_cls[row_of[:, 0]]                                   # 원본 (k=0) 타일 특징
 assert X.shape == (2591, 768) and np.isfinite(X).all()
 tl = np.array([int(t["label"]) for t in tiles]); timg = [t["image_id"] for t in tiles]
 log(f"원본(k=0) 타일 특징 {X.shape}, 타일 {len(tiles)}개 (라벨 0/1/2 = {np.bincount(tl).tolist()})")
 
-sp = list(csv.DictReader(open(OUT / "e00_make_splits/splits.csv", encoding="utf-8-sig")))
+sp = list(csv.DictReader(open(GRID / "e00_make_splits/splits.csv", encoding="utf-8-sig")))
 role, img_label = {}, {}
 for r in sp:
     role[(int(r["repeat"]), int(r["fold"]), r["image_id"])] = r["role"]

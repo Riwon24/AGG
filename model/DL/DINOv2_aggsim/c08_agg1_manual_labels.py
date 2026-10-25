@@ -10,7 +10,9 @@ import csv
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-OUT = HERE / "outputs"
+OUT = HERE / "outputs"                                  # 이 폴더의 결과 (c03 -> c04, c05, c06 -> c08 -> c09 가 서로의 출력을 읽는다)
+GRID = next((p for p in (HERE.parent / "exp_grid_aug" / "outputs", HERE.parent / "DINOv2_grid_augmentation" / "outputs") if p.exists()), HERE.parent / "DINOv2_grid_augmentation" / "outputs")
+#                                                       # 입력: DINOv2_grid_augmentation 의 출력 (읽기 전용; 로컬 작업 폴더 구조 또는 저장소 구조 중 있는 쪽)
 D = OUT / "c08_agg1_manual_labels"
 D.mkdir(parents=True, exist_ok=True)
 lines = []
@@ -28,7 +30,7 @@ MANUAL = {
     11: (["r00_c03"], {}), 12: (["r05_c04"], {}), 13: (["r02_c01"], {}), 14: (["r04_c06", "r04_c04"], {"r04_c04": "r04_c03"}),
 }
 rd = lambda p: list(csv.DictReader(open(p, encoding="utf-8-sig")))
-cond = sorted(rd(OUT / "e00_make_splits/conditions.csv"), key=lambda r: (r["metal"], r["condition"], r["image_id"]))
+cond = sorted(rd(GRID / "e00_make_splits/conditions.csv"), key=lambda r: (r["metal"], r["condition"], r["image_id"]))
 cond = [r for r in cond if int(r["label"]) == 1]
 assert len(cond) == 14
 num_img = {n: c["image_id"] for n, c in enumerate(cond, 1)}

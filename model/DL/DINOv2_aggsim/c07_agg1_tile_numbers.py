@@ -26,7 +26,9 @@ plt.rcParams["font.family"] = "Malgun Gothic"
 plt.rcParams["axes.unicode_minus"] = False
 
 HERE = Path(__file__).resolve().parent
-OUT = HERE / "outputs"
+OUT = HERE / "outputs"                                  # 이 폴더의 결과 (c03 -> c04, c05, c06 -> c08 -> c09 가 서로의 출력을 읽는다)
+GRID = next((p for p in (HERE.parent / "exp_grid_aug" / "outputs", HERE.parent / "DINOv2_grid_augmentation" / "outputs") if p.exists()), HERE.parent / "DINOv2_grid_augmentation" / "outputs")
+#                                                       # 입력: DINOv2_grid_augmentation 의 출력 (읽기 전용; 로컬 작업 폴더 구조 또는 저장소 구조 중 있는 쪽)
 D = OUT / "c07_agg1_tile_numbers"
 D.mkdir(parents=True, exist_ok=True)
 T, LABEL = 224, 1
@@ -38,10 +40,10 @@ def log(m):
 
 
 rd = lambda p: list(csv.DictReader(open(p, encoding="utf-8-sig")))
-cond = [r for r in rd(OUT / "e00_make_splits/conditions.csv") if int(r["label"]) == LABEL]
+cond = [r for r in rd(GRID / "e00_make_splits/conditions.csv") if int(r["label"]) == LABEL]
 man = {r["image_id"]: r for r in rd(HERE.parent / "preproc/outputs/s00b_meta_mag/manifest_v1.csv")}
 tiles = {}
-for r in rd(OUT / "e01_extract_features/tile_index.csv"):
+for r in rd(GRID / "e01_extract_features/tile_index.csv"):
     if int(r["label"]) == LABEL:
         tiles.setdefault(r["image_id"], []).append((r["tile_id"], int(r["x0"]), int(r["y0"])))
 assert len(cond) == 14
