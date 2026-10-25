@@ -22,6 +22,7 @@ import numpy as np
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
+import matplotlib.patheffects as pe  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 import sys  # noqa: E402
@@ -30,6 +31,11 @@ from gcommon import Logger, load_images, write_csv  # noqa: E402
 from gcommon import load_config as _lc  # noqa: E402
 
 SCRIPT = "m13_attention_analysis"
+import os as _os  # noqa: E402  (WSL 에서는 Windows 글꼴 파일을 경로로 등록해야 한글이 나온다)
+from matplotlib import font_manager as _fm  # noqa: E402
+for _f in ("C:/Windows/Fonts/malgun.ttf", "/mnt/c/Windows/Fonts/malgun.ttf"):
+    if _os.path.exists(_f):
+        _fm.fontManager.addfont(_f)
 plt.rcParams["font.family"] = "Malgun Gothic"
 plt.rcParams["axes.unicode_minus"] = False
 
@@ -171,18 +177,22 @@ def main():
         for j, r in enumerate(tby[i]):
             x0, y0 = int(int(r["x0"]) * 0.25), int(int(r["y0"]) * 0.25); s = int(224 * 0.25)
             cv2.rectangle(ovu, (x0, y0), (x0 + s - 1, y0 + s - 1), (255, 255, 255), 1)
-        return base.astype(np.uint8), ovu, rel
+        coords = [(int(int(r["x0"]) * 0.25), int(int(r["y0"]) * 0.25)) for r in tby[i]]
+        return base.astype(np.uint8), ovu, rel, coords
 
     def figure(items, fname, title):
         if not items:
             return
         fig, axes = plt.subplots(len(items), 2, figsize=(10.5, 3.7 * len(items)), squeeze=False)
         for row, (kind, lab, i) in enumerate(items):
-            base, ov, rel = overlay(i)
+            base, ov, rel, coords = overlay(i)
             axes[row, 0].imshow(base); axes[row, 0].axis("off")
             axes[row, 0].set_title(f"{ids[i].rsplit('/', 1)[0]}  (실제 AGG{lab}, 모델 양성 확률 {P[i][0]:.2f})", fontsize=8)
             im_ = axes[row, 1].imshow(ov); axes[row, 1].axis("off")
-            axes[row, 1].set_title(f"attention 오버레이 (균일 대비 배율; 최대 {rel.max():.1f}배, 흰 격자 = 타일, 파랑 = 마스크 윤곽)", fontsize=8)
+            for (cx, cy), v in zip(coords, rel):      # 격자 안에 균일 대비 배율(attention x 타일 수) 숫자 표기
+                axes[row, 1].text(cx + 28, cy + 28, f"{v:.1f}", ha="center", va="center", fontsize=7, color="white", fontweight="bold",
+                                  path_effects=[pe.withStroke(linewidth=1.8, foreground="black")])
+            axes[row, 1].set_title(f"attention 오버레이 (균일 대비 배율; 최대 {rel.max():.1f}배, 흰 격자 = 타일, 숫자 = 타일의 배율, 파랑 = 마스크 윤곽)", fontsize=8)
         sm = plt.cm.ScalarMappable(cmap="inferno", norm=plt.Normalize(0, 4.0)); cb = fig.colorbar(sm, ax=axes[:, 1].tolist(), fraction=0.02, pad=0.03, aspect=35); cb.set_label("attention x 타일 수 (1 = 균일, 4 이상 같은 색)", fontsize=7)
         fig.suptitle(title, fontsize=10); fig.savefig(log.dir / fname, dpi=120, bbox_inches="tight"); plt.close(fig)
     figure([r for r in reps if r[0] == "typical"], "fig_attention_typical.png", f"MIL attention ({main_s} fold 모델, 시드 5개 평균): 클래스별 대표 이미지 (맞힌 것)")

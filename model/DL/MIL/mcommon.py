@@ -101,12 +101,13 @@ def predict_mil(model, bags, nmax, device):
 
 
 def tile_keep(cfg, tiles_of):
-    """config tile_filter: all = 모든 분석 타일, full = 마스크 100% 타일(시편만 있는 타일)만. 반환: 이미지별로 tiles_of[i] 안에서 남길 타일의 위치 배열.
+    """config tile_filter: all = 모든 분석 타일, full = 마스크 100% 타일(시편만 있는 타일)만, min_frac = 마스크 비율 >= min_mask_frac 인 타일만. 반환: 이미지별로 tiles_of[i] 안에서 남길 타일의 위치 배열.
     full 모드의 타일 특징은 배경 증강 버전 사이에 픽셀이 같다 (시편만 있으므로). 이 사실은 호출한 쪽에서 assert 로 확인한다."""
     mode = cfg.get("tile_filter", "all")
-    assert mode in ("all", "full"), mode
+    assert mode in ("all", "full", "min_frac"), mode
     if mode == "all":
         return [np.arange(len(t)) for t in tiles_of]
     tindex = list(csv.DictReader(open(f"{cfg['paths']['aug_out']}/e01_extract_features/tile_index.csv", encoding="utf-8-sig")))
     mf = {(r["image_id"], r["tile_id"]): float(r["mask_frac"]) for r in csv.DictReader(open(cfg["paths"]["tiles_csv"], encoding="utf-8-sig"))}
-    return [np.array([j for j, ti in enumerate(t) if mf[(tindex[ti]["image_id"], tindex[ti]["tile_id"])] >= 0.999999], dtype=int) for t in tiles_of]
+    thr = 0.999999 if mode == "full" else float(cfg["min_mask_frac"])      # min_frac: 마스크 비율(시편 픽셀 비율)이 config min_mask_frac 이상인 타일만 (시편 비율이 낮은 가장자리 타일 제외)
+    return [np.array([j for j, ti in enumerate(t) if mf[(tindex[ti]["image_id"], tindex[ti]["tile_id"])] >= thr], dtype=int) for t in tiles_of]

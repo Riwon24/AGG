@@ -49,7 +49,7 @@ def main():
     mpred = rd(out / "m10_train_eval_mil" / "mil_predictions.csv")
     fold = rd(out / "m10_train_eval_mil" / "mil_fold_accuracy.csv")
     stats = rd(out / "m10_train_eval_mil" / "mil_train_stats.csv")
-    full_mode = cfg.get("tile_filter", "all") == "full"
+    full_mode = cfg.get("tile_filter", "all") in ("full", "min_frac")
     if full_mode:       # 마스크 100% 타일만 쓰는 판: baseline 도 같은 타일 집합으로 다시 학습한 것(m15)을 쓴다. 이전(모든 타일) 결과는 참고용
         bsum = {r["scheme"]: r for r in rd(out / "m15_baseline_pooled_logreg" / "baseline_summary.csv")}
         bpred = rd(out / "m15_baseline_pooled_logreg" / "baseline_predictions.csv")
@@ -81,9 +81,18 @@ def main():
     def ci(v):
         return np.percentile(v, [2.5, 97.5])
     f = lambda r, k: float(r[k])
-    tf = "마스크 100% 타일(시편만 있는 타일)만" if full_mode else "분석 타일 전체"
+    _tt = rd(out / "m10_train_eval_mil" / "attention_tiles.csv")
+    _cnt = {}
+    for r_ in _tt:
+        _cnt[r_["image_idx"]] = _cnt.get(r_["image_idx"], 0) + 1
+    if cfg.get("tile_filter", "all") == "min_frac":
+        tf = f"마스크 비율 {cfg['min_mask_frac']} 이상 타일만"
+        tdesc = f"마스크 비율 {cfg['min_mask_frac']} 이상 타일 (이미지당 {min(_cnt.values())}~{max(_cnt.values())}개, 전체 {len(_tt):,}개; 배경이 섞인 타일 중 시편 비율이 낮은 타일은 뺐다), baseline 도 같은 타일의 평균으로 다시 학습"
+    else:
+        tf = "마스크 100% 타일(시편만 있는 타일)만" if full_mode else "분석 타일 전체"
+        tdesc = "마스크 100% 타일 (이미지당 16~33개, 전체 1,309개; 시편만 있어 배경 증강이 이 타일의 픽셀을 바꾸지 않는다), baseline 도 같은 타일의 평균으로 다시 학습"
     L = [f"# Attention-based MIL vs 패치 평균 + logreg (이진: AGG0 vs AGG1+AGG2), 점수 비교 ({tf} 사용)\n",
-         "bag = 이미지 1장, instance = 그 이미지의 " + ("마스크 100% 타일 (이미지당 16~33개, 전체 1,309개; 시편만 있어 배경 증강이 이 타일의 픽셀을 바꾸지 않는다), baseline 도 같은 타일의 평균으로 다시 학습" if full_mode else "분석 타일") + "(DINOv2_grid_augmentation 의 cls 특징 768차원, 겹치지 않는 224px 타일). 같은 특징, 같은 분할(이미지 단위 분할 e00, LOCO, LOMO), 같은 학습/평가 방식(학습: 원본 + 배경 증강 5개 버전, 평가: 원본)이다. "
+         "bag = 이미지 1장, instance = 그 이미지의 " + (tdesc if full_mode else "분석 타일") + "(DINOv2_grid_augmentation 의 cls 특징 768차원, 겹치지 않는 224px 타일). 같은 특징, 같은 분할(이미지 단위 분할 e00, LOCO, LOMO), 같은 학습/평가 방식(학습: 원본 + 배경 증강 5개 버전, 평가: 원본)이다. "
          "모델은 Ilse et al. (2018) 의 gated attention MIL (타일 FC 64 → gated attention 64 → softmax 가중합 → FC → sigmoid, dropout 0.25, L2 1e-3, 40 epoch 고정, 시드 5개 앙상블). 하이퍼파라미터는 결과를 보기 전에 고정했고 조정하지 않았다.\n",
          "## 1. 점수 (baseline = 기존 패치 평균 + logreg)\n"]
     L.append("| 평가 | 방법 | accuracy | balanced accuracy | macro-F1 | recall AGG0 / AGG1+2 | AUROC |\n|---|---|---|---|---|---|---|")
