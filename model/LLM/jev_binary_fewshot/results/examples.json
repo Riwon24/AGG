@@ -1,0 +1,23 @@
+[
+ {
+  "role": "AGG",
+  "image_id": "BASE/PH1230-1050/x10#2 - AGG1",
+  "tile_id": "r04_c03",
+  "x0": 672,
+  "y0": 896
+ },
+ {
+  "role": "AGG",
+  "image_id": "REF/PH1180-1035/x10#1  - AGG1",
+  "tile_id": "r04_c03",
+  "x0": 672,
+  "y0": 896
+ },
+ {
+  "role": "NORMAL",
+  "image_id": "REF-LN/PH1255-1035/x10#! - AGG0",
+  "tile_id": "r04_c02",
+  "x0": 448,
+  "y0": 896
+ }
+]

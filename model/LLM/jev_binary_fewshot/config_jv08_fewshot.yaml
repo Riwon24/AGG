@@ -1,0 +1,19 @@
+# jv08: jv06 과 같은 설계에 예시 이미지(AGG 2, 정상 1)를 함께 보낸 판의 이진(AGG0 vs AGG1+AGG2) 평가 설정. 평가 방식은 jv06, jv03 과 같다.
+# 주의: 예시 타일이 평가 이미지 3장에서 나온다. 그 3장을 뺀 57장 비교는 jv08_subset_eval.py 가 따로 한다.
+paths:
+  tiles: "outputs/jv08_tiles_fewshot/input/tiles_grid_fewshot.jsonl"          # jv08_run_grid_tiles_fewshot.py 결과 (WSL ~/jevision_work/results/tiles_grid_fewshot.jsonl 의 사본)
+  conditions_csv: "../exp/outputs/e00_make_splits/conditions.csv"
+  splits_csv: "../exp/outputs/e00_make_splits/splits.csv"
+  dinov2_binary_results: "../exp_binary/outputs/b12_report/results_table.csv"
+  outputs_dir: "outputs/jv08_tiles_fewshot"
+
+data:
+  expected_images: 60
+  expected_tiles: 2591
+  positive_labels: [1, 2]
+
+scores: [mean_flat, frac_flat]
+primary_score: mean_flat
+cv: {n_splits: 5, n_repeats: 10, seed: 0}
+bootstrap: {n: 2000, seed: 0}
+permutation: {n_permutations: 20, seed: 0}
