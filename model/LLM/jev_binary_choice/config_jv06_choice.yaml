@@ -1,0 +1,19 @@
+# jv06: JEVision 타일 선택(choice) 형식 + 선택지 순서 교차 (프롬프트는 model/LLM/jev/scripts/run_tiles.py 의 문구). 이미지 단위 이진(AGG0 vs AGG1+AGG2) 평가 설정. 평가 방식은 jv03 과 같다.
+# 이미지 점수 mean_flat = 타일 P(FLAT_REGION) (두 순서 평균)의 이미지별 평균, frac_flat = 평균 확률 > 0.5 인 타일의 비율 (= 직접 선택 비율).
+paths:
+  tiles: "outputs/jv06_tiles_choice/input/tiles_grid_choice.jsonl"          # jv06_run_grid_tiles_choice.py 결과 (WSL ~/jevision_work/results/tiles_grid_choice.jsonl 의 사본)
+  conditions_csv: "../exp/outputs/e00_make_splits/conditions.csv"
+  splits_csv: "../exp/outputs/e00_make_splits/splits.csv"
+  dinov2_binary_results: "../exp_binary/outputs/b12_report/results_table.csv"
+  outputs_dir: "outputs/jv06_tiles_choice"
+
+data:
+  expected_images: 60
+  expected_tiles: 2591
+  positive_labels: [1, 2]
+
+scores: [mean_flat, frac_flat]
+primary_score: mean_flat
+cv: {n_splits: 5, n_repeats: 10, seed: 0}
+bootstrap: {n: 2000, seed: 0}
+permutation: {n_permutations: 20, seed: 0}
