@@ -1,0 +1,19 @@
+# jv07: jv06 과 같은 설계, 설명문(STATE)만 보강한 판의 이진(AGG0 vs AGG1+AGG2) 평가 설정. 평가 방식은 jv06, jv03 과 같다.
+# 주의: 설명문 보강이 평가에 쓰는 같은 60장의 타일을 보고 만든 것이라 점수가 낙관적일 수 있다.
+paths:
+  tiles: "outputs/jv07_tiles_choice_v2/input/tiles_grid_choice_v2.jsonl"          # jv07_run_grid_tiles_choice_v2.py 결과 (WSL ~/jevision_work/results/tiles_grid_choice_v2.jsonl 의 사본)
+  conditions_csv: "../exp/outputs/e00_make_splits/conditions.csv"
+  splits_csv: "../exp/outputs/e00_make_splits/splits.csv"
+  dinov2_binary_results: "../exp_binary/outputs/b12_report/results_table.csv"
+  outputs_dir: "outputs/jv07_tiles_choice_v2"
+
+data:
+  expected_images: 60
+  expected_tiles: 2591
+  positive_labels: [1, 2]
+
+scores: [mean_flat, frac_flat]
+primary_score: mean_flat
+cv: {n_splits: 5, n_repeats: 10, seed: 0}
+bootstrap: {n: 2000, seed: 0}
+permutation: {n_permutations: 20, seed: 0}
