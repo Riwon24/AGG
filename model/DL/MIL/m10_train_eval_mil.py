@@ -5,6 +5,7 @@
 - 모델: 타일 FC(768 -> 64) -> ReLU -> Dropout -> gated attention(tanh x sigmoid, 64) -> softmax 가중합 -> Dropout -> FC -> sigmoid. 고정 epoch(40), 조기 종료 없음, 시드 5개 앙상블.
 - 누수 방지 assert: train/test 이미지 서로소, 학습 bag 이 모두 학습 이미지에서 온 것, 표준화 통계에 test 타일이 없음, test 점수는 원본 bag 만 사용(다른 버전 bag 의 attention 은 해석용으로만 저장하고 예측에 쓰지 않음).
 - 지표는 fold 를 합친(pooled) 60장 예측으로 계산. IMG 는 반복 10회 각각 구해 평균 +- SD, LOCO/LOMO 는 한 번. AUROC 는 양성 확률로 계산 (LOCO/LOMO 는 fold 마다 모델이 달라 참고용).
+- mil.model_type: additive 이면 (config_additive.yaml) AdditiveGatedAttentionMIL (mcommon.py): head 를 pooling 전에 타일마다 적용해 타일별 기여도 a_k z_k 를 얻고, 같은 shape 의 contrib_{scheme} 배열을 attention_arrays.npz 에 추가로 저장한다. 지정하지 않으면(gated) 기존 동작과 출력이 그대로다.
 출력: mil_predictions.csv, mil_summary.csv, mil_fold_accuracy.csv, mil_train_stats.csv, attention_tiles.csv, attention_arrays.npz (scheme 별 [이미지, 버전, 시드, 타일]), log.txt
 """
 import argparse
@@ -44,6 +45,8 @@ def main():
     bags = [[F[k][tiles_of[i]].astype(np.float32) for k in range(K1)] for i in range(N)]
     mc = cfg["mil"]; S = mc["seeds"]
     log(f"bag {N}개 (이미지당 타일 {min(len(t) for t in tiles_of)}~{nmax}개), 버전 {K1}개, 특징 {cfg['features']} {bags[0][0].shape[1]}차원, 이진 라벨 음성 {int((y == 0).sum())} / 양성 {int((y == 1).sum())}")
+    if mc.get("model_type", "gated") != "gated":
+        log(f"모델 종류: {mc['model_type']} (타일별 기여도 a_k z_k 의 합 + bias = bag logit; attention_arrays.npz 에 contrib_* 추가 저장)")
     log(f"MIL: embed {mc['embed_dim']}, attn {mc['attn_dim']}, dropout {mc['dropout']}, L2 {mc['weight_decay']}, lr {mc['lr']}, batch {mc['batch_bags']} bag, epochs {mc['epochs']} (고정), 시드 {S}개 앙상블, 클래스 균형 손실 {mc['class_balanced_loss']}")
 
     # ---------- 분할 ----------
@@ -66,11 +69,13 @@ def main():
     log("분할 assert 통과: 기존 e00/그룹 분할 그대로, 모든 repeat 에서 모든 이미지가 정확히 한 번 test, train/test 서로소, train 에 두 클래스")
 
     pred_rows, sum_rows, fold_rows, stat_rows = [], [], [], []
-    ATT = {}
+    ATT, CON = {}, {}
+    additive = mc.get("model_type", "gated") == "additive"
     t0 = time.time()
     for sch, reps_ in plan.items():
         R = len(reps_)
         P = np.zeros((N, R)); att = np.full((N, K1, S, nmax), np.nan, np.float32)
+        con = np.full((N, K1, S, nmax), np.nan, np.float32) if additive else None
         for r, folds in enumerate(reps_):
             for fi, (tr, te, u) in enumerate(folds):
                 # ---- 학습 bag: 학습 이미지의 모든 버전, 표준화는 학습 bag 타일로만 ----
@@ -88,18 +93,22 @@ def main():
                     model, loss, tacc = train_mil(tr_n, ytr, cfg, seed, dev, nmax)
                     tl.append(loss); ta.append(tacc)
                     flat = [b for ib in te_all for b in ib]                                   # test 이미지의 모든 버전 (예측은 버전 0 만 사용)
-                    p, atts = predict_mil(model, flat, nmax, dev)
+                    p, atts, cons = predict_mil(model, flat, nmax, dev)
                     for j, i in enumerate(te):
                         pv[j, s] = p[j * K1]                                                  # 버전 0 = 원본
                         if r == 0:                                                           # attention 은 repeat 0 (LOCO/LOMO 는 유일한 repeat) 만 저장
                             for k in range(K1):
                                 att[i, k, s, :len(atts[j * K1 + k])] = atts[j * K1 + k]
+                                if additive:
+                                    con[i, k, s, :len(cons[j * K1 + k])] = cons[j * K1 + k]
                 P[te, r] = pv.mean(1)                                                        # 시드 앙상블 확률 (원본 bag)
                 stat_rows.append(dict(scheme=sch, repeat=r, fold=fi, unit=u, train_bags=len(tr_n), train_loss=round(float(np.mean(tl)), 4), train_acc=round(float(np.mean(ta)), 4)))
                 if sch != "IMG":
                     fold_rows.append(dict(scheme=sch, fold=fi, unit=u, n_test=len(te), accuracy=round(float(np.mean((P[te, r] > 0.5) == y[te])), 4)))
             print(f"  [{sch}] repeat {r + 1}/{R} 완료 ({time.time() - t0:.0f}s)", flush=True)
         ATT[sch] = att
+        if additive:
+            CON[sch] = con
         ms = [metrics_bin(y, (P[:, r] > 0.5).astype(int), P[:, r]) for r in range(R)]
         row = dict(scheme=sch, n_repeats=R)
         for k in ("accuracy", "balanced_acc", "macro_f1", "recall_neg", "recall_pos", "f1_pos", "auroc"):
@@ -124,7 +133,7 @@ def main():
             t = tindex[ti]; m = mf[(t["image_id"], t["tile_id"])]
             rows.append(dict(image_idx=i, image_id=ids[i], j=j, tile_id=t["tile_id"], x0=t["x0"], y0=t["y0"], mask_frac=m["mask_frac"], mask_px=m["mask_px"]))
     write_csv(f"{log.dir}/attention_tiles.csv", rows)
-    np.savez(f"{log.dir}/attention_arrays.npz", **{f"att_{k}": v for k, v in ATT.items()}, tile_counts=np.array([len(t) for t in tiles_of]))
+    np.savez(f"{log.dir}/attention_arrays.npz", **{f"att_{k}": v for k, v in ATT.items()}, **{f"contrib_{k}": v for k, v in CON.items()}, tile_counts=np.array([len(t) for t in tiles_of]))   # gated 모델이면 contrib_* 가 없어 이전과 같은 포맷
     log(f"\n누수 방지 확인: 모든 fold 에서 학습 bag 이 학습 이미지에서만 왔고(assert), 표준화 통계는 학습 bag 타일만 사용(assert), 조기 종료/하이퍼파라미터 탐색 없음(고정 epoch), test 점수는 원본 bag 만 사용")
     log(f"저장: {log.dir} (총 {time.time() - t0:.0f}s)")
 

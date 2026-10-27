@@ -12,6 +12,7 @@ import torch.nn as nn
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "exp_binary"))
+sys.path.insert(0, str(HERE.parent / "exp_group_cv"))                   # bcommon 이 self-contained 로 바뀌어 gcommon 의 경로를 더 이상 넣어 주지 않는다
 from bcommon import metrics_bin  # noqa: E402,F401
 from gcommon import Logger, check_folds, load_features, load_images, make_folds, write_csv  # noqa: E402,F401
 from gcommon import load_config as _load_config  # noqa: E402
@@ -45,6 +46,33 @@ class GatedAttentionMIL(nn.Module):
         return self.head(M).squeeze(-1), a
 
 
+class AdditiveGatedAttentionMIL(nn.Module):
+    """GatedAttentionMIL 의 pooling 과 classifier 의 합성 순서를 바꾼 additive 판 (Javed et al. 2022, Additive MIL).
+    embed 와 attention 은 GatedAttentionMIL 과 같은 구조이고, head(분류기)를 pooling 전에 타일마다 적용한다.
+      (기존)     logit = head( sum_k a_k h_k )
+      (additive) logit = sum_k a_k z_k + b,  z_k = head(h_k)   -> a_k z_k 가 그 타일이 bag logit 에 더한 기여도이고, 기여도의 합 + b 가 bag logit 과 정확히 같다.
+    타일별 head 는 bias 가 없고 bag 수준 bias b 하나만 둔다. 반환: (bag logit, attention a, 타일별 기여도 a_k z_k)."""
+
+    def __init__(self, d_in, embed_dim, attn_dim, p):
+        super().__init__()
+        self.embed = nn.Sequential(nn.Linear(d_in, embed_dim), nn.ReLU(), nn.Dropout(p))
+        self.V = nn.Linear(embed_dim, attn_dim)
+        self.U = nn.Linear(embed_dim, attn_dim)
+        self.w = nn.Linear(attn_dim, 1)
+        self.head = nn.Sequential(nn.Dropout(p), nn.Linear(embed_dim, 1, bias=False))
+        self.bias = nn.Parameter(torch.zeros(1))
+
+    def forward(self, X, mask):
+        H = self.embed(X)                                                              # (B, N, E)
+        A = self.w(torch.tanh(self.V(H)) * torch.sigmoid(self.U(H))).squeeze(-1)       # (B, N)
+        A = A.masked_fill(~mask, float("-inf"))
+        a = torch.softmax(A, dim=1)                                                    # 패딩은 0
+        z = self.head(H).squeeze(-1)                                                   # (B, N) 타일별 logit
+        contrib = a * z                                                                # (B, N) 타일별 기여도 (패딩은 0)
+        logit = contrib.masked_fill(~mask, 0.0).sum(1) + self.bias                     # (B,)
+        return logit, a, contrib
+
+
 def pad_bags(bags, nmax, d, device):
     """bag 목록 [(n_i, d) float32] -> (B, nmax, d) 텐서와 (B, nmax) bool 마스크 (nmax 보다 짧은 bag 은 0 패딩)"""
     X = np.zeros((len(bags), nmax, d), np.float32); M = np.zeros((len(bags), nmax), bool)
@@ -64,7 +92,10 @@ def train_mil(train_bags, ytr, cfg, seed, device, nmax):
     mc = cfg["mil"]
     torch.manual_seed(seed); np.random.seed(seed)
     d = train_bags[0].shape[1]
-    model = GatedAttentionMIL(d, mc["embed_dim"], mc["attn_dim"], mc["dropout"]).to(device)
+    mtype = mc.get("model_type", "gated")                                       # gated = 기존 (기본), additive = 타일별 기여도 판
+    assert mtype in ("gated", "additive"), mtype
+    cls_ = GatedAttentionMIL if mtype == "gated" else AdditiveGatedAttentionMIL
+    model = cls_(d, mc["embed_dim"], mc["attn_dim"], mc["dropout"]).to(device)
     opt = torch.optim.Adam(model.parameters(), lr=mc["lr"], weight_decay=mc["weight_decay"])
     X, M = pad_bags(train_bags, nmax, d, device)
     yt = torch.tensor(ytr, dtype=torch.float32, device=device)
@@ -78,26 +109,30 @@ def train_mil(train_bags, ytr, cfg, seed, device, nmax):
         perm = torch.randperm(len(ytr), generator=g).to(device); tot = 0.0
         for i in range(0, len(ytr), mc["batch_bags"]):
             idx = perm[i:i + mc["batch_bags"]]
-            logit, _ = model(X[idx], M[idx])
+            logit = model(X[idx], M[idx])[0]
             loss = (w[idx] * bce(logit, yt[idx])).mean()
             opt.zero_grad(); loss.backward(); opt.step()
             tot += float(loss) * len(idx)
         last = tot / len(ytr)
     model.eval()
     with torch.no_grad():
-        logit, _ = model(X, M)
+        logit = model(X, M)[0]
         acc = float(((logit > 0).float() == yt).float().mean())
     return model, last, acc
 
 
 @torch.no_grad()
 def predict_mil(model, bags, nmax, device):
-    """bag 목록 -> (확률 (B,), attention 목록 [(n_i,)])"""
+    """bag 목록 -> (확률 (B,), attention 목록 [(n_i,)], 기여도 목록 [(n_i,)]). 기여도는 additive 모델에서만 있고 gated 모델이면 None 목록이다."""
     d = bags[0].shape[1]
     X, M = pad_bags(bags, nmax, d, device)
-    logit, a = model(X, M)
-    p = torch.sigmoid(logit).cpu().numpy(); a = a.cpu().numpy()
-    return p, [a[j, :len(b)] for j, b in enumerate(bags)]
+    out = model(X, M)
+    p = torch.sigmoid(out[0]).cpu().numpy(); a = out[1].cpu().numpy()
+    if len(out) > 2:
+        c = out[2].cpu().numpy(); cons = [c[j, :len(b)] for j, b in enumerate(bags)]
+    else:
+        cons = [None] * len(bags)
+    return p, [a[j, :len(b)] for j, b in enumerate(bags)], cons
 
 
 def tile_keep(cfg, tiles_of):

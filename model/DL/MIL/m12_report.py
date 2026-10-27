@@ -34,6 +34,7 @@ def main():
     ap.add_argument("--config", default=None)
     a = ap.parse_args()
     cfg = _lc(a.config or HERE / "config.yaml")
+    mlab = "MIL (additive)" if cfg["mil"].get("model_type", "gated") == "additive" else "MIL (gated attention)"      # 표와 그림의 방법 이름 (model_type 이 없으면 기존과 같음)
     out = Path(cfg["paths"]["outputs_dir"])
     log = Logger(out, SCRIPT)
     log("config:", cfg["_config_path"])
@@ -93,12 +94,14 @@ def main():
         tdesc = "마스크 100% 타일 (이미지당 16~33개, 전체 1,309개; 시편만 있어 배경 증강이 이 타일의 픽셀을 바꾸지 않는다), baseline 도 같은 타일의 평균으로 다시 학습"
     L = [f"# Attention-based MIL vs 패치 평균 + logreg (이진: AGG0 vs AGG1+AGG2), 점수 비교 ({tf} 사용)\n",
          "bag = 이미지 1장, instance = 그 이미지의 " + (tdesc if full_mode else "분석 타일") + "(DINOv2_grid_augmentation 의 cls 특징 768차원, 겹치지 않는 224px 타일). 같은 특징, 같은 분할(이미지 단위 분할 e00, LOCO, LOMO), 같은 학습/평가 방식(학습: 원본 + 배경 증강 5개 버전, 평가: 원본)이다. "
-         "모델은 Ilse et al. (2018) 의 gated attention MIL (타일 FC 64 → gated attention 64 → softmax 가중합 → FC → sigmoid, dropout 0.25, L2 1e-3, 40 epoch 고정, 시드 5개 앙상블). 하이퍼파라미터는 결과를 보기 전에 고정했고 조정하지 않았다.\n",
+         + ("모델은 Ilse et al. (2018) 의 gated attention MIL (타일 FC 64 → gated attention 64 → softmax 가중합 → FC → sigmoid, dropout 0.25, L2 1e-3, 40 epoch 고정, 시드 5개 앙상블)." if mlab.startswith("MIL (gated") else
+          "모델은 같은 구조에서 pooling 과 분류기의 순서만 바꾼 additive 판 (Javed et al. 2022 식: 타일마다 분류기를 적용한 뒤 attention 으로 가중합, 타일 FC 64 → gated attention 64, dropout 0.25, L2 1e-3, 40 epoch 고정, 시드 5개 앙상블).")
+         + " 하이퍼파라미터는 결과를 보기 전에 고정했고 조정하지 않았다.\n",
          "## 1. 점수 (baseline = 기존 패치 평균 + logreg)\n"]
     L.append("| 평가 | 방법 | accuracy | balanced accuracy | macro-F1 | recall AGG0 / AGG1+2 | AUROC |\n|---|---|---|---|---|---|---|")
     rows = []
     for sc in ("IMG", "LOCO", "LOMO"):
-        for nm, S in (("baseline (패치 평균 + logreg)", bsum[sc]), ("MIL (gated attention)", msum[sc])):
+        for nm, S in (("baseline (패치 평균 + logreg)", bsum[sc]), (mlab, msum[sc])):
             sd = f" ± {f(S, 'accuracy_sd'):.3f}" if (sc == "IMG") else ""
             L.append(f"| {SCH[sc]} | {nm} | {f(S, 'accuracy'):.3f}{sd} | {f(S, 'balanced_acc'):.3f} | {f(S, 'macro_f1'):.3f} | {f(S, 'recall_neg'):.2f} / {f(S, 'recall_pos'):.2f} | {f(S, 'auroc'):.3f} |")
             rows.append(dict(scheme=sc, method=nm, accuracy=f(S, "accuracy"), balanced_acc=f(S, "balanced_acc"), macro_f1=f(S, "macro_f1"), recall_neg=f(S, "recall_neg"), recall_pos=f(S, "recall_pos"), auroc=f(S, "auroc")))
@@ -171,7 +174,7 @@ def main():
 
     fig, ax = plt.subplots(figsize=(8.5, 4.6))
     w = 0.36
-    for k, (nm, col, S, Pm) in enumerate((("baseline (패치 평균 + logreg)", "#4c78a8", bsum, PB), ("MIL (gated attention)", "#c0392b", msum, PM))):
+    for k, (nm, col, S, Pm) in enumerate((("baseline (패치 평균 + logreg)", "#4c78a8", bsum, PB), (mlab, "#c0392b", msum, PM))):
         vals = [f(S[sc], "accuracy") for sc in ("IMG", "LOCO", "LOMO")]
         cis = [ci(accvec(Pm[sc], idx_img)) for sc in ("IMG", "LOCO", "LOMO")]
         xs = np.arange(3) + (k - 0.5) * w

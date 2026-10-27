@@ -1,0 +1,61 @@
+# [Additive MIL 대조 실험] config.yaml 과 완전히 같은 하이퍼파라미터, 분할, 타일 집합이고 mil.model_type 만 additive 로 바꿨다 (결과를 보기 전에 고정, 탐색하지 않음). 로컬 확인용.
+# Attention-based MIL (Ilse et al. 2018, gated attention) 로 DINOv2_grid_augmentation 의 타일 특징을 이진(AGG0 vs AGG1+AGG2) 분류하고 attention 을 해석한다.
+# 상대경로는 이 config 파일이 있는 폴더(exp_mil/) 기준. 모든 하이퍼파라미터는 결과를 보기 전에 고정했고 test 결과로 조정하지 않는다.
+# 용어: 1단계 폴더 = 금속 종류(6), 2단계 폴더 = 처리 조건(10) = 처리 방법(5) x 온도(2)
+paths:
+  conditions_csv: "../exp/outputs/e00_make_splits/conditions.csv"        # 이미지 60장의 금속, 처리 조건, 처리 방법, 온도, 3분류 라벨 (읽기 전용)
+  splits_csv: "../exp/outputs/e00_make_splits/splits.csv"                # 기존 이미지 단위 층화 5-fold x 10 반복 분할 (읽기 전용, 새 분할을 만들지 않음)
+  aug_out: "../exp_grid_aug/outputs"                                     # DINOv2_grid_augmentation 의 타일 특징 (읽기 전용, 특징 추출 파이프라인 그대로)
+  tiles_csv: "../exp_grid_aug/outputs/g00_tile_list/tiles.csv"           # 분석 타일 2,591개 (mask_frac 등, 읽기 전용)
+  baseline_summary: "../exp_binary/outputs/b10_run_binary_cv/cv_bin_summary.csv"        # 기존 이진 baseline 결과 (읽기 전용)
+  baseline_predictions: "../exp_binary/outputs/b10_run_binary_cv/cv_bin_predictions.csv"
+  images_root: ".."                                                      # AGG_labeled_only (원본 이미지, 시각화용 읽기 전용)
+  masks_dir: ["C:/Users/<USER>/Downloads/AGG/data/ML_preproc/outputs/m01_masks/masks", "/mnt/c/Users/<USER>/Downloads/AGG/data/ML_preproc/outputs/m01_masks/masks"]
+  manifest_csv: "../preproc/outputs/s00b_meta_mag/manifest_v1.csv"
+  outputs_dir: "outputs_additive"
+
+tile_filter: all                                        # all = 모든 분석 타일, full = 마스크 100% 타일만 (config_full.yaml)
+
+positive_labels: [1, 2]                                  # AGG1, AGG2 -> 양성(1), AGG0 -> 음성(0) (기존 이진 baseline 과 같은 정의)
+
+schemes:                                                # 기존 그룹 분할과 같은 정의 (exp_group_cv 의 g10 과 같은 make_folds 를 그대로 사용)
+  LOCO: condition                                       # 처리 조건 1개 제외 (10 fold)
+  LOMO: method                                          # 처리 방법 1개 제외 (5 fold)
+                                                        # IMG = e00 의 이미지 단위 층화 5-fold x 10 반복 (위 splits_csv)
+
+experiment:                                             # 기존 이진 baseline (패치 평균 + logreg) 과 같은 분류기 정의 (m15 에서 사용)
+  logreg: {C: 1.0, class_weight: balanced, max_iter: 1000}
+
+features: cls                                           # 타일 특징: DINOv2 cls 토큰 768차원 (baseline primary 와 같은 특징, 차원 변경 없음)
+primary_baseline_setting: "tiles|cls|mean|logreg"       # baseline 과 같은 표에 놓을 기존 설정
+
+mil:                                                    # 모델과 학습 하이퍼파라미터 (탐색하지 않고 고정)
+  embed_dim: 64                                         # 타일 특징 -> FC(768 -> 64) -> ReLU -> Dropout
+  attn_dim: 64                                          # gated attention: tanh(V h) * sigmoid(U h) -> w (64 -> 1) -> softmax (Ilse et al. 2018)
+  dropout: 0.25                                         # 타일 임베딩 뒤와 분류기 앞
+  weight_decay: 0.001                                   # L2 정규화 (Adam 의 weight_decay)
+  lr: 0.001
+  batch_bags: 16                                        # 한 스텝의 bag 수 (타일 수가 달라 0 패딩 + 마스크)
+  epochs: 40                                            # 고정. test 결과나 검증 손실로 조기 종료하지 않는다
+  seeds: 5                                              # 같은 fold 를 시드 5개로 학습해 bag 확률과 attention 을 평균 (앙상블)
+  base_seed: 0
+  model_type: additive                                  # [Additive MIL 대조] gated = 기존 (config.yaml), additive = head 를 pooling 전에 타일마다 적용 (Javed et al. 2022). 이 줄과 outputs_dir 외에는 config.yaml 과 같다
+  class_balanced_loss: true                             # 학습 bag 의 클래스 빈도에 반비례하는 가중 BCE (baseline logreg 의 class_weight=balanced 와 같은 취지)
+  # 학습 bag: 학습 이미지의 모든 버전 (원본 + 배경 증강 5개 = 6개), 평가 bag: 원본(k=0) 만 (DINOv2_grid_augmentation 과 같은 학습/평가 방식)
+  # CLAM 의 instance-level clustering branch 는 쓰지 않는다 (attention pooling 만 사용)
+
+permutation:                                            # 라벨 순열 검사: 라벨을 섞어 같은 절차로 학습. 계산량 때문에 순열마다 시드 1개로 학습 (본 평가는 시드 5개 앙상블)
+  n_permutations: 20
+  seed: 0
+  seeds_per_permutation: 1
+
+bootstrap:
+  n: 2000
+  seed: 0
+
+attention:                                              # attention 해석 지표와 대표 이미지 선택 규칙 (결과를 보기 전에 고정)
+  main_scheme: LOCO                                     # 시각화와 통계에 쓰는 attention: 시험 조건을 학습에서 뺀 LOCO fold 모델의 것 (이미지 단위 분할보다 엄격)
+  representative_rule: "클래스(AGG0, AGG1, AGG2)마다 (a) 맞힌 이미지 중 양성 확률이 그 클래스 중앙값에 가장 가까운 1장, (b) 틀린 이미지 중 오차가 가장 큰 1장"
+  top_fraction: 0.1                                     # 상위 10% attention 타일의 성질을 보는 데 사용
+
+forbidden_terms: ["시편 종류"]

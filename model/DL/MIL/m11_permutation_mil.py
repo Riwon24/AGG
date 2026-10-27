@@ -54,7 +54,7 @@ def main():
                 ps = np.zeros(len(te))
                 for s in range(pm["seeds_per_permutation"]):
                     model, _, _ = train_mil(tr_n, ytr, cfg, 7000000 + 100000 * k + 1000 * fi + s, dev, nmax)
-                    p, _ = predict_mil(model, te_b, nmax, dev)
+                    p, _, _ = predict_mil(model, te_b, nmax, dev)
                     ps += p / pm["seeds_per_permutation"]
                 P[te] = ps
             assert not np.isnan(P).any()
