@@ -21,6 +21,7 @@
 | **nemotron-3-nano-omni (무료)** | OpenRouter | 가능 (간헐 502) | **무작위 45장만** (하루 50건 한도) | 0.333 / 0.200 | 0.412 | 41/45를 AGG0 예측, 이 표본의 항상 AGG0 기준선 0.378보다 낮음 |
 | gemma-4-31b-it (무료) | OpenRouter | 막힘 | 미실행 | 평가 안 함 | - | 상류(Google) 공용 풀 429 |
 | **gemini-3.5-flash-lite 타일 방식** | Gemini API | 가능 | (10x 60장, 타일 293/1,514개) | 평가 안 함 | **0.513** | `flat=true` 0건, 하루 한도로 중단 |
+| **AnomalyAgent (Claude Sonnet 5.5)** | Anthropic API + 로컬 임베딩 | 가능 | (이미지 29장: AGG0 11 / AGG2 18) | 0.448 / 평가 안 함 | 0.467 (AGG2>AGG0) | 판정의 이상 비율이 AGG0 5/11, AGG2 7/18로 비슷함. 상세는 [`anomaly_agent/`](anomaly_agent/README.md) |
 
 기준선(항상 다수 클래스 AGG0 예측): accuracy 0.464 (179장), 0.467 (10x 60장).
 
@@ -120,6 +121,12 @@
 - 비교: 같은 타일·질문에서 JEVision `mean_flat`은 AUROC 0.944였다. gemini-3.5-flash-lite는 편평한 부분이 뚜렷하지 않으면 "없다"고 답하는 보수적인 답변을 했다. JEVision의 높은 점수에도 조명 띠·스크래치 같은 아티팩트가 섞여 있었으므로(`jev/README.md` 5절), 이 차이를 어느 모델이 더 정확하다는 뜻으로 읽을 수는 없다.
 - 한계: 19%만 처리했다. 다만 `flat=true`가 0건이라 나머지를 처리해도 같을 가능성이 높다(추정).
 
+### 3.8 AnomalyAgent (Claude Sonnet 5.5 + 로컬 Qwen3-4B 임베딩)
+- 설정: 저자 참고 구현([mala-lab/AnomalyAgent](https://github.com/mala-lab/AnomalyAgent), `6db47f3`)의 에이전트(planner, 도구, reasoner, reflector, 템플릿 도구)를 판단 모델만 Claude API로 바꿔 돌렸다. 후보 문장은 AGG1 표시 타일 캡션에서 만들었고, 평가는 후보를 만든 이미지를 뺀 이미지 29장(AGG0 11 / AGG2 18)이다. 저자 저장소에 없는 `tools.py`는 우리가 논문 설명을 보고 재구성했다.
+- 결과: 판정 정확도 0.448, AUROC(최종 점수) 0.467, margin AUROC 0.535. AGG0를 이상으로 판정한 비율(5/11)과 AGG2의 비율(7/18)이 비슷하다. 처음 세 번의 실행은 planner의 API 오류(system 메시지가 떨어져 있어 호출이 거부됨)가 있었고 고친 뒤 다시 돌렸지만 결과는 크게 달라지지 않았다.
+- 진단: 에이전트의 확대 영역이 사용자가 표시한 AGG 위치와 우연보다 훨씬 많이 겹쳤다(덮은 비율 49.9% 대 16.2%). 에이전트는 AGG 자리의 옅은 얼룩을 찾아 쓰고도 "자연스러운 음영"으로 해석해 정상으로 판정했다. 이상 정의를 바꿔도 판정은 거의 안 바뀌었다.
+- 한계: 이미지 29장이라 AUROC 오차가 ±0.11 정도이고, 같은 설정으로 다시 돌려도 판정의 약 14%가 바뀐다. 상세와 한계는 [`anomaly_agent/README.md`](anomaly_agent/README.md).
+
 ## 4. 알려진 한계와 주의
 
 - API 모델 결과는 모두 **한 번 실행**이다. 같은 입력에서 출력이 재현되는지는 확인하지 않았다(kimi-k3는 temperature 1, seed 0 지정).
@@ -155,5 +162,7 @@
 | `api/scripts/run_tiles_api.py`, `api/scripts/agg_tiles_api.py` | Gemini 타일 방식 호출과 이미지 단위 집계 |
 | `api/results/api_nemotron-omni-or.jsonl`, `api/results/metrics_api_nemotron-omni-or.txt` | nemotron-omni(OpenRouter) 45장 결과와 지표 |
 | `api/results/tiles_api_gemini-3.5-flash-lite.jsonl`, `api/results/metrics_tiles_api_gemini-3.5-flash-lite.txt` | Gemini 타일 방식 결과(타일 293개)와 집계 |
+| `anomaly_agent/` | AnomalyAgent 실험 (스크립트, 재구성한 `tools.py`, 실행별 결과, 캡션과 후보 문장, 사용자가 표시한 AGG 영역) |
+| `jev_tile_score_viz/` | JEVision jv06~jv08 타일 점수 시각화 스크립트와 이미지 점수 박스플롯 |
 
 `run_api.py` 옵션: `--rpm`(분당 요청 수 제한), `--shuffle`(무작위 순서), 하루 한도(429에 대기 5분 초과)가 나오면 재시도 없이 중단. 재개 시 성공한 행만 건너뛴다. `--provider openrouter`를 추가했고, 서버가 응답 본문에 담아 보내는 일시 오류(502 등)는 재시도한다.

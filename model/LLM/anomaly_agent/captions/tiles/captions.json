@@ -1,0 +1,923 @@
+{
+ "model": "claude-sonnet-5-5",
+ "captions": [
+  {
+   "label": "AGG1표시",
+   "n": 1,
+   "image_id": "BASE/PH1180-1035/x10#1  - AGG1",
+   "tile_id": "r01_c01",
+   "mask_frac": 1.0,
+   "perspective": 1,
+   "caption": "The surface looks uniformly blue-gray with a fine, grainy, speckled texture. Tiny bright specks and slightly darker mottled patches are scattered across it, giving a matte, slightly rough appearance. No distinct scratches, cracks, or large defects are visible."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 1,
+   "image_id": "BASE/PH1180-1035/x10#1  - AGG1",
+   "tile_id": "r01_c01",
+   "mask_frac": 1.0,
+   "perspective": 2,
+   "caption": "The surface has a fine, uniformly granular, matte texture in a mottled blue tone, with a slightly rough, pitted look made up of many tiny speckles. Scattered bright pinpoint glints show minor reflectivity, and a few faintly darker, cloudy patches add subtle tonal variation. There are no obvious scratches, cracks, or large defects."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 1,
+   "image_id": "BASE/PH1180-1035/x10#1  - AGG1",
+   "tile_id": "r01_c01",
+   "mask_frac": 1.0,
+   "perspective": 3,
+   "caption": "The surface is blue-toned with a fine, granular, speckled texture. Slightly darker, cloudy patches appear in the upper left and scattered through the lower half, and a few tiny bright specks are dotted across the field. There are no distinct cracks, scratches, or pits, and the texture is otherwise fairly uniform."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 2,
+   "image_id": "BASE/PH1205-1050/x10#1 - AGG1",
+   "tile_id": "r02_c01",
+   "mask_frac": 0.893,
+   "perspective": 1,
+   "caption": "The surface is mostly a fine-grained, speckled blue-gray field with a uniformly rough, granular texture. Small bright specks and a few faint darker patches are scattered across it. A dark brown-black strip runs down the left edge, separated from the blue area by a wavy, irregular boundary with a thin lighter rim."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 2,
+   "image_id": "BASE/PH1205-1050/x10#1 - AGG1",
+   "tile_id": "r02_c01",
+   "mask_frac": 0.893,
+   "perspective": 2,
+   "caption": "The surface is fine-grained and uniformly rough, with a blue-tinted, speckled texture of tiny bright specks that look like small reflective particles or micro-asperities. These give it a matte, slightly glittery look. A few faint darker mottled patches are scattered across it. Along the left edge, a dark, coarse band with a wavy, irregular boundary and a thin lighter rim marks a sharp change in surface condition. That band is rougher and less reflective than the blue area."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 2,
+   "image_id": "BASE/PH1205-1050/x10#1 - AGG1",
+   "tile_id": "r02_c01",
+   "mask_frac": 0.893,
+   "perspective": 3,
+   "caption": "A dark brown-black band runs down the left edge of the image. Its boundary with the rest of the surface is wavy and irregular, and a thin light tan rim follows it. The remaining surface is a uniform blue-gray with a fine granular, speckled texture and scattered small bright specks. A few faint darker mottled patches appear in the upper left and center-right, but there are no distinct cracks or large defects."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 3,
+   "image_id": "BASE/PH1205-1050/x10#1 - AGG1",
+   "tile_id": "r02_c05",
+   "mask_frac": 1.0,
+   "perspective": 1,
+   "caption": "The surface looks uniformly fine-grained and rough, with a blue-gray tint and a dense speckled texture of tiny bright white specks scattered over a darker mottled background. It has no obvious scratches, cracks, or large defects. There is only slight tonal variation, with a faintly lighter hazy patch in the upper left and a few darker areas toward the left-center."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 3,
+   "image_id": "BASE/PH1205-1050/x10#1 - AGG1",
+   "tile_id": "r02_c05",
+   "mask_frac": 1.0,
+   "perspective": 2,
+   "caption": "The surface has a uniformly rough, fine-grained texture with a blue-gray tone, covered in dense, small speckles. Many tiny bright specks scatter light like glints from micro-facets, while darker pits and shadowed patches are mixed in. Overall it looks matte to slightly sparkly rather than smooth or mirror-like, with no obvious scratches or large defects. A faint lighter hazy area appears toward the upper left."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 3,
+   "image_id": "BASE/PH1205-1050/x10#1 - AGG1",
+   "tile_id": "r02_c05",
+   "mask_frac": 1.0,
+   "perspective": 3,
+   "caption": "The surface has a fine, granular blue-gray texture with small bright specks scattered fairly evenly across it. There is a slightly lighter, hazier patch in the upper left and a faint darker area on the left side. A few isolated dark pits or spots are visible, but there are no cracks, scratches, or other pronounced defects."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 4,
+   "image_id": "BASE/PH1230-1050/x10#2 - AGG1",
+   "tile_id": "r04_c03",
+   "mask_frac": 1.0,
+   "perspective": 1,
+   "caption": "The surface looks uniformly rough and finely granular, with a dark blue-gray tone. Many small bright specks are scattered evenly across it, giving a speckled, sandpaper-like texture. A few faint darker patches are visible, but there are no obvious scratches, cracks, or other large-scale features."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 4,
+   "image_id": "BASE/PH1230-1050/x10#2 - AGG1",
+   "tile_id": "r04_c03",
+   "mask_frac": 1.0,
+   "perspective": 2,
+   "caption": "The surface has a fine, uniformly granular texture in a dark blue-gray tone. It looks matte and slightly rough, with many tiny bright specks that catch the light, so reflectivity is low overall with small scattered glints. A few faint darker blotches are visible, but there are no obvious scratches, cracks, or large defects."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 4,
+   "image_id": "BASE/PH1230-1050/x10#2 - AGG1",
+   "tile_id": "r04_c03",
+   "mask_frac": 1.0,
+   "perspective": 3,
+   "caption": "The surface has a uniform, fine-grained texture in a blue-gray tone, with small bright specks scattered evenly across it. A few faint darker patches appear, such as one at left of center, but there are no distinct defects, cracks, scratches, or other clearly irregular regions."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 5,
+   "image_id": "BASE-LC/PH1180-1035/x10#2 - AGG1",
+   "tile_id": "r05_c02",
+   "mask_frac": 0.79,
+   "perspective": 1,
+   "caption": "The surface is a fine-grained, uniformly speckled matte area with a bluish-gray tone. It is covered in small light and dark granular specks, with a few faint darker patches and tiny bright flecks scattered across it. A dark, nearly black band along the bottom edge meets the textured region at a slightly irregular, jagged boundary."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 5,
+   "image_id": "BASE-LC/PH1180-1035/x10#2 - AGG1",
+   "tile_id": "r05_c02",
+   "mask_frac": 0.79,
+   "perspective": 2,
+   "caption": "The sample surface is uniformly rough and finely granular. It has a matte, stippled texture of tiny blue-gray grains with scattered bright specks and darker pits, and it shows little specular reflectivity. A dark, featureless band along the bottom edge looks like shadow or an unlit area, and it meets the textured surface at a slightly irregular boundary."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 5,
+   "image_id": "BASE-LC/PH1180-1035/x10#2 - AGG1",
+   "tile_id": "r05_c02",
+   "mask_frac": 0.79,
+   "perspective": 3,
+   "caption": "The upper ~80% of the image is a uniformly fine-grained, speckled blue-gray surface with a slightly rough, granular texture and a few faint darker mottled patches. A dark, nearly black band runs along the bottom edge, separated from the lighter surface by a slightly jagged boundary with a thin faint reddish-tan rim."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 6,
+   "image_id": "BASE-LC/PH1205-1050/x10#1 - AGG1",
+   "tile_id": "r01_c02",
+   "mask_frac": 1.0,
+   "perspective": 1,
+   "caption": "The surface looks uniformly fine-grained and rough, with a dense speckled texture in blue-gray tones. Tiny bright specks and darker mottled patches are scattered evenly across it. There are no obvious scratches, cracks, or large defects, apart from a faint lighter smudge near the lower left-center."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 6,
+   "image_id": "BASE-LC/PH1205-1050/x10#1 - AGG1",
+   "tile_id": "r01_c02",
+   "mask_frac": 1.0,
+   "perspective": 2,
+   "caption": "The surface has a uniform, fine-grained, matte texture in a bluish-gray tone. It is covered in dense speckling, with tiny bright specks scattered across a darker background, which gives it a slightly rough, sandy look with low overall reflectivity. A few faint darker patches and one small lighter blotch near the lower left break up the otherwise even finish, but there are no obvious scratches, cracks, or pits."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 6,
+   "image_id": "BASE-LC/PH1205-1050/x10#1 - AGG1",
+   "tile_id": "r01_c02",
+   "mask_frac": 1.0,
+   "perspective": 3,
+   "caption": "The surface is a fairly uniform blue-gray with a fine, grainy, speckled texture. Small bright specks are scattered across it, and a few slightly darker, diffuse patches show faintly in the upper center and left. There is also a small, faint lighter blotch near the bottom center (around x≈205, y≈350). None of these features is sharply defined, so there are no distinct scratches, cracks, or large defects."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 7,
+   "image_id": "BASE-LC/PH1230-1050/x10#1 - AGG1",
+   "tile_id": "r01_c05",
+   "mask_frac": 1.0,
+   "perspective": 1,
+   "caption": "The surface has a uniform, finely granular texture in muted blue-gray tones. Many tiny bright specks are scattered across a darker mottled background, which gives it a slightly rough, matte look like fine sandblasted or grainy metal. There are no obvious scratches, cracks, or large defects, only subtle variations in shading across the field."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 7,
+   "image_id": "BASE-LC/PH1230-1050/x10#1 - AGG1",
+   "tile_id": "r01_c05",
+   "mask_frac": 1.0,
+   "perspective": 2,
+   "caption": "The surface has a uniformly fine-grained, matte texture in a blue-gray tone. It is covered with dense speckles, and small bright pinpoints scatter light across a darker, slightly mottled background. It looks rough and finely pitted rather than smooth, with low overall reflectivity, and no large scratches, cracks, or other defects are visible."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 7,
+   "image_id": "BASE-LC/PH1230-1050/x10#1 - AGG1",
+   "tile_id": "r01_c05",
+   "mask_frac": 1.0,
+   "perspective": 3,
+   "caption": "The surface is a uniform blue-gray with a fine, granular, speckled texture, and small bright specks are scattered evenly across it. There are no distinct regions, scratches, cracks, or other irregularities, apart from very faint, slightly darker mottled patches that blend smoothly into the surrounding area."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 8,
+   "image_id": "BASE-LCSI/PH1180-1050/x10#2 - AGG1",
+   "tile_id": "r04_c05",
+   "mask_frac": 1.0,
+   "perspective": 1,
+   "caption": "The surface looks uniformly rough and finely granular, with a blue-gray tone. It is covered in dense, speckled texture made of tiny bright and dark specks, with no obvious scratches, cracks, or large defects. The grain-like pattern is evenly distributed across the whole field, which gives it a matte, sandpaper-like look."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 8,
+   "image_id": "BASE-LCSI/PH1180-1050/x10#2 - AGG1",
+   "tile_id": "r04_c05",
+   "mask_frac": 1.0,
+   "perspective": 2,
+   "caption": "The surface has a uniformly rough, finely granular texture with a blue-gray tint. It is covered in dense, small speckles and pits, with scattered bright glints where tiny facets catch the light. The grain is even across the field, and there are no obvious scratches, cracks, or large defects. Overall it looks matte and slightly abrasive, like a bead-blasted or fine-ground finish, with only low, localized reflectivity from the sparkling points."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 8,
+   "image_id": "BASE-LCSI/PH1180-1050/x10#2 - AGG1",
+   "tile_id": "r04_c05",
+   "mask_frac": 1.0,
+   "perspective": 3,
+   "caption": "The surface has a uniform, fine-grained granular texture in a blue-gray tone, with small bright specks and darker pits scattered evenly across the field. There are no distinct regions, scratches, cracks, or other irregularities, and only slight local variations in brightness."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 9,
+   "image_id": "BASE-LCSI/PH1180-1050/x10#2 - AGG1",
+   "tile_id": "r05_c03",
+   "mask_frac": 0.8,
+   "perspective": 1,
+   "caption": "The surface is a uniformly fine-grained, speckled blue-gray texture. Small bright white flecks and darker pits are scattered across it, giving a matte, sandy or finely pitted look. Along the bottom edge is a rough, dark brown-black band with an irregular, jagged boundary and a few small bright specks. It looks like a different material or a damaged or oxidized region."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 9,
+   "image_id": "BASE-LCSI/PH1180-1050/x10#2 - AGG1",
+   "tile_id": "r05_c03",
+   "mask_frac": 0.8,
+   "perspective": 2,
+   "caption": "The upper part of the sample has a uniformly fine-grained, matte, bluish-gray surface with a speckled, sand-like roughness. Tiny bright specks give it slight, scattered glints, but overall reflectivity is low. Along the bottom edge is a darker, uneven band of rough brown-black material with a ragged boundary and small bright spots, which looks coarser and more irregular than the surface above."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 9,
+   "image_id": "BASE-LCSI/PH1180-1050/x10#2 - AGG1",
+   "tile_id": "r05_c03",
+   "mask_frac": 0.8,
+   "perspective": 3,
+   "caption": "The upper ~80% of the image is a uniform blue-gray surface with a fine granular, speckled texture and scattered small bright specks. A few faint darker mottled patches appear in the upper left. Along the bottom edge is a distinct, irregular dark brown-black band with a rough, uneven texture and a few light flecks, which sharply contrasts with the lighter surface above and has a ragged boundary."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 10,
+   "image_id": "BASE-LSi/PH1180-1035/x10#1 - AGG1",
+   "tile_id": "r04_c01",
+   "mask_frac": 1.0,
+   "perspective": 1,
+   "caption": "The surface has a uniformly fine-grained, speckled texture in muted blue-gray tones. Tiny bright specks and darker flecks are scattered evenly across it, and a few faint dark, blotchy patches appear in the upper left and lower center. There are no obvious scratches, cracks, or large defects, so the overall look is matte and slightly rough."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 10,
+   "image_id": "BASE-LSi/PH1180-1035/x10#1 - AGG1",
+   "tile_id": "r04_c01",
+   "mask_frac": 1.0,
+   "perspective": 2,
+   "caption": "The surface has a uniformly fine-grained, matte, rough texture with a speckled blue-gray appearance. Many tiny bright specks scatter light across it, and a few faint darker patches show slight unevenness. There are no distinct scratches or cracks, and overall reflectivity is low and diffuse."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 10,
+   "image_id": "BASE-LSi/PH1180-1035/x10#1 - AGG1",
+   "tile_id": "r04_c01",
+   "mask_frac": 1.0,
+   "perspective": 3,
+   "caption": "The surface is a fairly uniform blue-gray with a fine, granular, speckled texture and scattered tiny bright specks. A few faint, slightly darker mottled patches show up near the upper left and lower center, but there are no distinct scratches, cracks, or pits."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 11,
+   "image_id": "BASE-LSi/PH1230-1050/x10#1 - AGG1",
+   "tile_id": "r00_c05",
+   "mask_frac": 0.856,
+   "perspective": 1,
+   "caption": "The surface has a uniform, finely granular texture with a blue-gray tint, covered in small bright specks that look like light reflecting off tiny particles or grains. A dark band runs along the top edge with a slightly irregular boundary. A few faint darker patches appear on the left side, but the surface is otherwise even and matte with no obvious cracks or scratches."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 11,
+   "image_id": "BASE-LSi/PH1230-1050/x10#1 - AGG1",
+   "tile_id": "r00_c05",
+   "mask_frac": 0.856,
+   "perspective": 2,
+   "caption": "The surface has a uniformly rough, fine-grained texture, like a matte, sand-blasted or peened finish. Many tiny bright specks scatter light across a blue-gray background, giving it a granular, sparkly look with little overall reflectivity. A few faint darker patches show up on the left side, and the top edge is slightly uneven where the sample meets a dark, featureless region."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 11,
+   "image_id": "BASE-LSi/PH1230-1050/x10#1 - AGG1",
+   "tile_id": "r00_c05",
+   "mask_frac": 0.856,
+   "perspective": 3,
+   "caption": "A dark, nearly black band runs along the top edge, and its lower boundary is slightly wavy and uneven. Below it, the blue-gray surface has a uniform fine-grained, speckled texture with scattered bright specks. There are a few faint darker, blurry patches on the left side, near the upper left and lower left, but no distinct cracks, scratches, or other sharp defects."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 12,
+   "image_id": "REF/PH1180-1035/x10#1  - AGG1",
+   "tile_id": "r04_c03",
+   "mask_frac": 1.0,
+   "perspective": 1,
+   "caption": "The surface has a uniform, finely granular texture in a muted blue-gray tone. It is covered with dense, small speckles, with scattered bright white glints and darker pits. The grain is even across the whole field, with no obvious scratches, cracks, or large defects. A faint, slightly darker patch appears left of center, but it is subtle."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 12,
+   "image_id": "REF/PH1180-1035/x10#1  - AGG1",
+   "tile_id": "r04_c03",
+   "mask_frac": 1.0,
+   "perspective": 2,
+   "caption": "The surface has a uniformly fine, grainy, matte texture, with a dense speckle of tiny bright and dark particles across a blue-gray background. The scattered pinpoint highlights suggest a slightly rough, finely pitted finish with limited overall reflectivity, and there are no obvious scratches, cracks, or large defects."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 12,
+   "image_id": "REF/PH1180-1035/x10#1  - AGG1",
+   "tile_id": "r04_c03",
+   "mask_frac": 1.0,
+   "perspective": 3,
+   "caption": "The surface is a fairly uniform blue-gray with a fine, speckled grain texture. Small bright specks and darker pits are scattered evenly across it. There is one faint, slightly darker patch left of center, but no distinct scratches, cracks, or other clear irregularities."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 13,
+   "image_id": "REF/PH1205-1050/x10#1 - AGG1",
+   "tile_id": "r00_c03",
+   "mask_frac": 0.957,
+   "perspective": 1,
+   "caption": "The surface looks uniformly blue and finely grainy, with a speckled, matte texture of tiny bright and dark specks scattered evenly across it. A darker, irregular, slightly ragged edge runs along the top of the frame, and there are no obvious large scratches, cracks, or pits."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 13,
+   "image_id": "REF/PH1205-1050/x10#1 - AGG1",
+   "tile_id": "r00_c03",
+   "mask_frac": 0.957,
+   "perspective": 2,
+   "caption": "The surface has a fine, uniformly granular texture with a matte blue finish. Tiny bright specks scattered across it give a slight sparkle, but overall reflectivity is low and diffuse. It looks mildly rough and speckled, with no deep scratches or pits, only subtle mottling in tone. A dark, irregular edge runs along the top, where the surface ends in a slightly ragged boundary."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 13,
+   "image_id": "REF/PH1205-1050/x10#1 - AGG1",
+   "tile_id": "r00_c03",
+   "mask_frac": 0.957,
+   "perspective": 3,
+   "caption": "The surface is a fairly uniform blue with fine speckled grain texture and a few scattered bright specks. A dark, irregular band runs along the top edge, with a wavy, ragged boundary where the blue surface ends. A few slightly darker mottled patches appear in the lower and central areas, but there are no distinct cracks or scratches."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 14,
+   "image_id": "REF/PH1230-1050/x10#1 - AGG1",
+   "tile_id": "r05_c04",
+   "mask_frac": 0.881,
+   "perspective": 1,
+   "caption": "The surface has a fine, granular, speckled texture in blue-gray tones, with scattered bright specks and a few small darker spots. Toward the bottom it brightens into a hazy, pale cream glare and then drops off into a dark, uneven band along the lower edge, which looks like the sample edge or a shadowed boundary."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 14,
+   "image_id": "REF/PH1230-1050/x10#1 - AGG1",
+   "tile_id": "r05_c04",
+   "mask_frac": 0.881,
+   "perspective": 2,
+   "caption": "The surface has a fine, uniformly granular, matte texture with a speckled, slightly rough look. Tiny bright specks scatter light across a blue-gray field, and a few small dark pits or spots appear, mainly in the lower left. Toward the bottom the surface brightens into a pale, hazy, washed-out band with a more grainy, streaked texture. It ends at a dark, irregular edge or shadow along the bottom, and reflectivity is low to moderate overall with no clear scratches or cracks."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 14,
+   "image_id": "REF/PH1230-1050/x10#1 - AGG1",
+   "tile_id": "r05_c04",
+   "mask_frac": 0.881,
+   "perspective": 3,
+   "caption": "The surface has a fine, grainy blue-gray texture with scattered bright specks. It brightens into a pale, cream-colored hazy band near the bottom, above a dark, uneven edge along the lower border. A few small darker blotches appear on the left side of the lower-middle area, and the image looks noisy and unevenly lit overall."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 15,
+   "image_id": "REF-LN/PH1180-1035/x10#1 - AGG1",
+   "tile_id": "r02_c01",
+   "mask_frac": 0.941,
+   "perspective": 1,
+   "caption": "The surface is a fine-grained, uniformly textured blue-gray field with a speckled, matte look. Tiny bright specks are scattered across it, and faint, short scratch-like marks are barely visible. A dark, irregular band runs along the left edge, with a thin bright streak near its top, and it marks the edge of the sample."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 15,
+   "image_id": "REF-LN/PH1180-1035/x10#1 - AGG1",
+   "tile_id": "r02_c01",
+   "mask_frac": 0.941,
+   "perspective": 2,
+   "caption": "The surface has a fine, uniformly grainy, matte texture in a blue-gray tone, with a speckled look from many tiny bright reflective points scattered across it. It is moderately rough at the microscopic level and has low overall reflectivity, with no deep scratches or pits. Along the left edge there is a dark, uneven border with a thin bright streak, and the surface looks slightly brighter and more reflective just inside this edge."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 15,
+   "image_id": "REF-LN/PH1180-1035/x10#1 - AGG1",
+   "tile_id": "r02_c01",
+   "mask_frac": 0.941,
+   "perspective": 3,
+   "caption": "The surface is mostly a uniform blue-gray, finely granular texture with scattered small bright specks. A dark, nearly black band runs along the left edge with a slightly wavy boundary, and a thin bright streak appears at the upper left corner within that dark region."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 16,
+   "image_id": "REF-LN/PH1205-1050/x10#1 - AGG1",
+   "tile_id": "r04_c04",
+   "mask_frac": 1.0,
+   "perspective": 1,
+   "caption": "The surface has a fine, uniform granular texture with a blue-gray tint. Many small bright white specks are scattered evenly across it, against darker, mottled speckling that gives a slightly rough, matte look. Faint, short, randomly oriented scratch-like marks appear in places, but there are no large defects, cracks, or pits."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 16,
+   "image_id": "REF-LN/PH1205-1050/x10#1 - AGG1",
+   "tile_id": "r04_c04",
+   "mask_frac": 1.0,
+   "perspective": 2,
+   "caption": "The surface has a uniformly rough, fine-grained texture with a blue-gray tint. It is covered in densely packed microscopic pits and granules, and scattered bright white specks reflect light like small glints. Overall it looks matte and slightly pitted, with little smooth or mirror-like area, and there are no obvious large scratches, cracks, or other defects."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 16,
+   "image_id": "REF-LN/PH1205-1050/x10#1 - AGG1",
+   "tile_id": "r04_c04",
+   "mask_frac": 1.0,
+   "perspective": 3,
+   "caption": "The surface has a fine, uniform granular texture in a blue-gray tone, speckled with small bright white reflective points and darker pits spread evenly across the field. I see no distinct regions, scratches, cracks, or other localized irregularities, and the speckle density and brightness are consistent throughout."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 17,
+   "image_id": "REF-LN/PH1205-1050/x10#1 - AGG1",
+   "tile_id": "r04_c06",
+   "mask_frac": 0.856,
+   "perspective": 1,
+   "caption": "The surface is a fine-grained, uniformly rough texture with a blue-gray tint. It is speckled with many small bright specks and a few faint darker patches, and there is a smooth, dark, nearly black band along the right edge. The boundary between the textured area and the dark band is fairly sharp but slightly irregular."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 17,
+   "image_id": "REF-LN/PH1205-1050/x10#1 - AGG1",
+   "tile_id": "r04_c06",
+   "mask_frac": 0.856,
+   "perspective": 2,
+   "caption": "The surface is a fine, uniformly rough, granular texture with a blue-gray tint. Many small bright specks scatter light across it, and a few faint darker patches show through, which gives it a matte, finely pitted look rather than a smooth, mirror-like finish. The right side is a dark, nearly black, featureless band with a fairly sharp, slightly irregular edge against the textured area. It reflects very little light and may be a void, a shadow, or a differently treated region."
+  },
+  {
+   "label": "AGG1표시",
+   "n": 17,
+   "image_id": "REF-LN/PH1205-1050/x10#1 - AGG1",
+   "tile_id": "r04_c06",
+   "mask_frac": 0.856,
+   "perspective": 3,
+   "caption": "The left and central part of the image shows a uniformly granular, blue-gray surface with fine bright speckles and a few faint darker mottled patches, mainly in the upper left and lower left. A smooth, dark brown-black band runs vertically along the right edge, with a fairly sharp but slightly uneven boundary against the textured area."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 18,
+   "image_id": "REF-LN/PH1255-1050/x10#1 - AGG0",
+   "tile_id": "r03_c05",
+   "mask_frac": 1.0,
+   "perspective": 1,
+   "caption": "The surface looks uniformly fine-grained and rough, with a dense, speckled texture in muted blue-gray tones. Tiny bright specks and darker pits are scattered evenly across the field, which gives it a matte, sandy or peened look. There are no obvious scratches, cracks, or large defects."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 18,
+   "image_id": "REF-LN/PH1255-1050/x10#1 - AGG0",
+   "tile_id": "r03_c05",
+   "mask_frac": 1.0,
+   "perspective": 2,
+   "caption": "The surface has a uniformly rough, fine-grained texture of densely packed microscopic granules and pits, giving it a matte, sandblasted look in a bluish-gray tone. Scattered bright pinpoint glints show where tiny raised facets catch the light, but overall reflectivity is low and diffuse, with no visible scratches, cracks, or large defects."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 18,
+   "image_id": "REF-LN/PH1255-1050/x10#1 - AGG0",
+   "tile_id": "r03_c05",
+   "mask_frac": 1.0,
+   "perspective": 3,
+   "caption": "The surface has a uniform, fine-grained granular texture in a blue-gray tone, speckled with small bright reflective points spread evenly across the field. There are no distinct regions, scratches, cracks, pits, or other irregularities, apart from faint, gradual shifts in brightness that look like mottling."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 19,
+   "image_id": "REF/PH1230-1035/x10#1 - AGG0",
+   "tile_id": "r04_c02",
+   "mask_frac": 1.0,
+   "perspective": 1,
+   "caption": "The surface has a uniform, finely granular texture in a blue-gray tone, covered with many small bright white specks and darker flecks that give it a speckled, sandy look. There are no obvious scratches, cracks, or large defects, and the grain-like pattern is distributed evenly across the whole field of view."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 19,
+   "image_id": "REF/PH1230-1035/x10#1 - AGG0",
+   "tile_id": "r04_c02",
+   "mask_frac": 1.0,
+   "perspective": 2,
+   "caption": "The surface has a uniformly fine-grained, speckled texture in a blue-gray tone. Many small bright specks scatter light across a mottled background, which suggests a matte, finely roughened finish, such as a bead-blasted or sanded surface, with only a little glint. No large scratches, pits, cracks, or other distinct defects are visible, and the roughness and reflectivity look even across the whole field."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 19,
+   "image_id": "REF/PH1230-1035/x10#1 - AGG0",
+   "tile_id": "r04_c02",
+   "mask_frac": 1.0,
+   "perspective": 3,
+   "caption": "The surface is a uniform, fine-grained texture in blue-gray tones, speckled with small bright white flecks and darker spots spread evenly across the field. There are no distinct regions, scratches, cracks, or other localized irregularities."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 20,
+   "image_id": "BASE-LSi/PH1255-1035/x10#1 - AGG0",
+   "tile_id": "r03_c05",
+   "mask_frac": 1.0,
+   "perspective": 1,
+   "caption": "The surface looks uniformly fine-grained and rough, with a blue-gray tone. It is covered in a dense, speckled texture of tiny particles, and small bright specks scatter light across it. There are no obvious scratches, cracks, or large defects, and the grain structure appears even and matte."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 20,
+   "image_id": "BASE-LSi/PH1255-1035/x10#1 - AGG0",
+   "tile_id": "r03_c05",
+   "mask_frac": 1.0,
+   "perspective": 2,
+   "caption": "The surface has a fine, uniform granular texture, with a dense speckled pattern that gives it a matte, slightly rough, sandpaper-like look. Scattered tiny bright specks reflect light, but the blue-gray background is mostly dull and shows no visible scratches, cracks, or large defects."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 20,
+   "image_id": "BASE-LSi/PH1255-1035/x10#1 - AGG0",
+   "tile_id": "r03_c05",
+   "mask_frac": 1.0,
+   "perspective": 3,
+   "caption": "The surface is a uniform, finely granular texture in blue-gray tones, with small bright specks scattered evenly across it. There are no distinct regions, scratches, cracks, or other irregularities, apart from a slightly darker, diffuse patch near the center that blends smoothly into the surrounding area."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 21,
+   "image_id": "BASE-LSi/PH1230-1035/x10#1 - AGG0",
+   "tile_id": "r03_c01",
+   "mask_frac": 1.0,
+   "perspective": 1,
+   "caption": "The surface looks uniformly rough and finely granular. It has a blue-gray tone, and countless tiny pits and short scratch-like marks are scattered across it in no particular direction. Small bright specks, probably reflective grain edges or particles, are scattered through the darker textured background. There are no large defects, cracks, or distinct features, and the texture is consistent from edge to edge."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 21,
+   "image_id": "BASE-LSi/PH1230-1035/x10#1 - AGG0",
+   "tile_id": "r03_c01",
+   "mask_frac": 1.0,
+   "perspective": 2,
+   "caption": "The surface has a fine, uniformly granular texture in a blue-gray tone. It is covered in dense microscopic pitting and speckling, with scattered tiny bright specks that catch the light, so it looks matte and rough overall with only minor glints of reflectivity. No large scratches, cracks, or other distinct defects are visible, and the grain pattern is even across the field of view."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 21,
+   "image_id": "BASE-LSi/PH1230-1035/x10#1 - AGG0",
+   "tile_id": "r03_c01",
+   "mask_frac": 1.0,
+   "perspective": 3,
+   "caption": "The surface has a fairly uniform, fine-grained texture in a bluish-gray tone, speckled with small bright reflective points and darker pits spread evenly across the field. I see no distinct regions, scratches, cracks, or other large irregularities, only slight shifts in brightness from the granular roughness."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 22,
+   "image_id": "BASE-LC/PH1205-1035/x10#1 - AGG0",
+   "tile_id": "r01_c05",
+   "mask_frac": 1.0,
+   "perspective": 1,
+   "caption": "The surface has a uniformly rough, fine-grained texture with a blue-gray tint. It is densely speckled with tiny bright specks and dark pits, which gives it a granular, sandpaper-like look. The texture is even across the field, with no obvious scratches, cracks, or large defects."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 22,
+   "image_id": "BASE-LC/PH1205-1035/x10#1 - AGG0",
+   "tile_id": "r01_c05",
+   "mask_frac": 1.0,
+   "perspective": 2,
+   "caption": "The surface has a uniformly rough, fine-grained texture. It is made up of densely packed microscopic grains and pits in a blue-gray tone, with scattered bright specular flecks where tiny facets catch the light. Reflectivity is low and diffuse overall, with no visible scratches, cracks, or large defects, so the matte, sand-blasted or granular finish looks even across the whole field."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 22,
+   "image_id": "BASE-LC/PH1205-1035/x10#1 - AGG0",
+   "tile_id": "r01_c05",
+   "mask_frac": 1.0,
+   "perspective": 3,
+   "caption": "The surface is uniformly fine-grained and speckled, with a blue-gray tone and scattered tiny bright and dark specks spread evenly across the field. There are no distinct regions, scratches, cracks, or other noticeable irregularities, apart from a slightly darker, more muted patch near the upper center."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 23,
+   "image_id": "REF/PH1255-1035/x10#1 - AGG0",
+   "tile_id": "r03_c03",
+   "mask_frac": 1.0,
+   "perspective": 1,
+   "caption": "The surface has a fine, uniform granular texture in a blue-gray tone. It is covered with densely packed tiny bright specks and darker flecks that give it a speckled, slightly sparkly look. There are no obvious scratches, cracks, or large defects, apart from a single small dark spot near the center-right."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 23,
+   "image_id": "REF/PH1255-1035/x10#1 - AGG0",
+   "tile_id": "r03_c03",
+   "mask_frac": 1.0,
+   "perspective": 2,
+   "caption": "The surface has a uniformly fine-grained, granular texture in a blue-gray tone, with a dense speckle of tiny bright reflective points and darker pits scattered evenly across it. It looks matte to slightly sparkly and finely rough, like a bead-blasted or sandy finish, with no visible scratches, cracks, or large defects."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 23,
+   "image_id": "REF/PH1255-1035/x10#1 - AGG0",
+   "tile_id": "r03_c03",
+   "mask_frac": 1.0,
+   "perspective": 3,
+   "caption": "The surface has a uniform, finely granular texture in a blue-gray tone, with small bright speckles and darker specks scattered evenly across the field. There are no distinct regions, scratches, cracks, or other clear irregularities, apart from a single tiny dark spot near the center-right."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 24,
+   "image_id": "BASE-LCSI/PH1230-1035/x10#2 - AGG0",
+   "tile_id": "r01_c04",
+   "mask_frac": 1.0,
+   "perspective": 1,
+   "caption": "The surface has a uniform, fine-grained texture in muted blue-gray tones, covered with dense speckling of tiny bright and dark points. Small glints and slight tonal mottling suggest a matte, slightly rough finish, with no obvious scratches, cracks, or large defects."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 24,
+   "image_id": "BASE-LCSI/PH1230-1035/x10#2 - AGG0",
+   "tile_id": "r01_c04",
+   "mask_frac": 1.0,
+   "perspective": 2,
+   "caption": "The surface is uniformly rough and finely granular, with a dense, speckled texture of tiny pits and grains in muted blue-gray tones. Scattered bright pinpoint glints show small reflective facets, but the surface is mostly matte and diffuse, with no visible scratches, cracks, or large defects."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 24,
+   "image_id": "BASE-LCSI/PH1230-1035/x10#2 - AGG0",
+   "tile_id": "r01_c04",
+   "mask_frac": 1.0,
+   "perspective": 3,
+   "caption": "The surface has a uniform, fine-grained blue-gray texture with small bright specks scattered evenly across it. It shows no distinct regions, scratches, cracks, or other noticeable irregularities."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 25,
+   "image_id": "BASE/PH1230-1035/x10#! - AGG0",
+   "tile_id": "r04_c01",
+   "mask_frac": 1.0,
+   "perspective": 1,
+   "caption": "The surface has a uniform, finely granular texture in a muted blue-gray tone. Tiny bright specks and dark pits are scattered evenly across it, giving it a matte, slightly pitted look. There are no obvious scratches, cracks, or large defects. Slightly lighter patches appear toward the upper left and center, probably from uneven lighting."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 25,
+   "image_id": "BASE/PH1230-1035/x10#! - AGG0",
+   "tile_id": "r04_c01",
+   "mask_frac": 1.0,
+   "perspective": 2,
+   "caption": "The surface has a uniformly fine-grained, matte texture with a blue-gray tint. It is covered in tiny pits and granules that give it a rough, slightly sandblasted look. Scattered pinpoint glints show weak, diffuse reflectivity, and there are no obvious scratches, cracks, or large defects."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 25,
+   "image_id": "BASE/PH1230-1035/x10#! - AGG0",
+   "tile_id": "r04_c01",
+   "mask_frac": 1.0,
+   "perspective": 3,
+   "caption": "The surface has a fairly uniform blue-gray, finely granular texture, with dense small pits and specks scattered evenly across it. It is slightly lighter along the upper left edge and has a few small bright speckles, but I see no distinct scratches, cracks, or localized defects."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 26,
+   "image_id": "BASE-LC/PH1230-1035/x101 - AGG0",
+   "tile_id": "r01_c01",
+   "mask_frac": 1.0,
+   "perspective": 1,
+   "caption": "The surface has a uniform, fine-grained texture in muted blue-gray tones, with a mottled, slightly rough look from densely packed tiny speckles. A few small bright specks and faint darker patches are scattered across it, but there are no obvious cracks, scratches, or large defects."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 26,
+   "image_id": "BASE-LC/PH1230-1035/x101 - AGG0",
+   "tile_id": "r01_c01",
+   "mask_frac": 1.0,
+   "perspective": 2,
+   "caption": "The surface has a fine, uniformly grainy texture in a muted blue-gray tone. Dense microscopic speckling and slight mottling give it a matte, finely rough finish. Scattered tiny bright specks reflect light, but there is little overall reflectivity, and no obvious scratches, cracks, or large defects are visible."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 26,
+   "image_id": "BASE-LC/PH1230-1035/x101 - AGG0",
+   "tile_id": "r01_c01",
+   "mask_frac": 1.0,
+   "perspective": 3,
+   "caption": "The surface is a fairly uniform, fine-grained blue-gray texture with a speckled, matte appearance and small bright specks scattered throughout. There are no distinct regions, scratches, cracks, or other obvious irregularities. The only variation is a slight mottled difference in brightness across the field."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 27,
+   "image_id": "REF-LN/PH1230-1035/x10#1 - AGG0",
+   "tile_id": "r05_c06",
+   "mask_frac": 0.839,
+   "perspective": 1,
+   "caption": "The surface looks uniformly fine-grained and matte, with a blue-gray tint and a dense, slightly rough, pitted texture. Tiny bright specks are scattered across it. The sample's corner sits against a dark background at the right and bottom, and the edge there is slightly uneven. The surface shows no obvious large scratches, cracks, or discolored patches."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 27,
+   "image_id": "REF-LN/PH1230-1035/x10#1 - AGG0",
+   "tile_id": "r05_c06",
+   "mask_frac": 0.839,
+   "perspective": 2,
+   "caption": "The sample has a matte, uniformly rough surface with a fine, granular, pitted texture in a bluish-gray tone. It shows scattered tiny bright specks where light catches raised grains, but no overall mirror-like reflectivity. The right and bottom edges are slightly irregular and worn, and they border a dark background."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 27,
+   "image_id": "REF-LN/PH1230-1035/x10#1 - AGG0",
+   "tile_id": "r05_c06",
+   "mask_frac": 0.839,
+   "perspective": 3,
+   "caption": "The sample surface is a uniformly bluish-gray with a fine, mottled, grainy texture and scattered tiny bright specks, and I see no distinct regions, scratches, or defects. The only irregularity is along the right and bottom edges, where the sample ends against a dark background and the border looks slightly ragged and worn."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 28,
+   "image_id": "BASE-LCSI/PH1255-1035/x10#1 - AGG0",
+   "tile_id": "r01_c06",
+   "mask_frac": 0.802,
+   "perspective": 1,
+   "caption": "The surface is a fine, uniformly grainy blue-gray texture with a speckled, matte look from many tiny bright specks. A dark, nearly black band runs down the right edge with a slightly ragged boundary. A small pale scratch or fiber-like mark sits near the top left, and there are a few faint specks along the edge. Otherwise the surface looks fairly even and free of major defects."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 28,
+   "image_id": "BASE-LCSI/PH1255-1035/x10#1 - AGG0",
+   "tile_id": "r01_c06",
+   "mask_frac": 0.802,
+   "perspective": 2,
+   "caption": "The surface is a uniformly fine-grained, matte blue-gray with a slightly rough, speckled texture. Tiny bright specks give it a faint sparkle, but overall reflectivity is low and diffuse. A short, thin light scratch or fiber-like mark sits near the top center, and the right edge is a dark, shadowed boundary that looks slightly ragged where it meets the lit surface."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 28,
+   "image_id": "BASE-LCSI/PH1255-1035/x10#1 - AGG0",
+   "tile_id": "r01_c06",
+   "mask_frac": 0.802,
+   "perspective": 3,
+   "caption": "The left two-thirds of the image shows a uniformly granular, blue-gray metal surface with fine speckled texture. A dark, nearly black band runs vertically along the right edge, with a slightly ragged boundary against the lighter region. Near the top there is a small, thin, light-colored scratch or fiber-like mark, and a faint tiny speck sits along the edge near the middle right."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 29,
+   "image_id": "BASE-LCSI/PH1230-1050/x10#1 - AGG0",
+   "tile_id": "r02_c06",
+   "mask_frac": 0.864,
+   "perspective": 1,
+   "caption": "The sample surface is a fine-grained, matte blue-gray texture. It is covered in dense speckling, with small bright specular glints scattered across it and darker pits between them. The right edge is irregular and slightly ragged, and beyond it is a dark, nearly black background. Overall the surface looks rough and uniformly granular, with no obvious large scratches or cracks."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 29,
+   "image_id": "BASE-LCSI/PH1230-1050/x10#1 - AGG0",
+   "tile_id": "r02_c06",
+   "mask_frac": 0.864,
+   "perspective": 2,
+   "caption": "The sample surface is a blue-gray, finely granular and matte, with a dense speckled texture of tiny pits and grains that make it uniformly rough. Scattered bright specular glints show where small facets catch the light, but overall reflectivity is low. The right edge is irregular and slightly ragged, bordering a dark, nearly black area with no visible detail."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 29,
+   "image_id": "BASE-LCSI/PH1230-1050/x10#1 - AGG0",
+   "tile_id": "r02_c06",
+   "mask_frac": 0.864,
+   "perspective": 3,
+   "caption": "The left two-thirds of the image shows a uniformly granular, blue-gray surface with fine speckling and scattered tiny bright specks. A dark, nearly black region runs down the right side, separated from the textured area by an irregular, slightly jagged edge that bulges and recedes along its length. Apart from that boundary, the textured area shows no distinct scratches, cracks, or pits."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 30,
+   "image_id": "BASE/PH1205-1035/x10#1 - AGG0",
+   "tile_id": "r00_c02",
+   "mask_frac": 0.83,
+   "perspective": 1,
+   "caption": "The surface has a fine, uniformly granular texture with a blue tint. Many small bright specks sparkle across it, which gives it a sandy or frosted look. A dark, rough, uneven band runs along the top edge. Just below that band are a few faint yellowish-brown stains and small dark spots, and the rest of the surface looks fairly even."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 30,
+   "image_id": "BASE/PH1205-1035/x10#1 - AGG0",
+   "tile_id": "r00_c02",
+   "mask_frac": 0.83,
+   "perspective": 2,
+   "caption": "The surface is uniformly fine-grained and matte, with a blue-gray tone and a dense speckle of tiny bright glints where individual grains catch the light. This gives it a rough, sandblasted or peened look with low overall reflectivity. A dark, coarse, irregular band runs along the top edge, and a few small brownish-yellow spots and faint discoloration sit just below it, suggesting localized staining or deposits."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 30,
+   "image_id": "BASE/PH1205-1035/x10#1 - AGG0",
+   "tile_id": "r00_c02",
+   "mask_frac": 0.83,
+   "perspective": 3,
+   "caption": "A dark, rough, brownish-black band runs along the top edge and contrasts sharply with the fine-grained, speckled blue surface below. Near the boundary, a faint yellowish-green discoloration and a few small dark brown spots or particles stand out against the otherwise uniform granular texture."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 31,
+   "image_id": "BASE/PH1255-1035/x10#1 - AGG0",
+   "tile_id": "r05_c02",
+   "mask_frac": 0.845,
+   "perspective": 1,
+   "caption": "The surface is a uniformly rough, finely granular texture with a blue-gray tint. Small bright specks and darker pits are scattered evenly across it, giving a matte, sandblasted look. A darker, coarser brownish-black band runs along the bottom edge, which may be the edge of the sample or a different region."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 31,
+   "image_id": "BASE/PH1255-1035/x10#1 - AGG0",
+   "tile_id": "r05_c02",
+   "mask_frac": 0.845,
+   "perspective": 2,
+   "caption": "The surface is uniformly fine-grained and matte blue-gray, with a dense speckled texture of tiny bright specks that catch the light, so it looks slightly rough, like a sandblasted or finely pitted finish. It has low overall reflectivity and no obvious scratches or large defects. A darker, coarser, uneven band along the bottom edge appears rougher and less reflective than the main area."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 31,
+   "image_id": "BASE/PH1255-1035/x10#1 - AGG0",
+   "tile_id": "r05_c02",
+   "mask_frac": 0.845,
+   "perspective": 3,
+   "caption": "The upper ~85% of the image shows a uniform, finely granular blue-gray surface with a speckled texture and scattered small bright specks. Along the bottom edge is a distinct dark brown-black band with a coarser, rougher texture, separated from the blue-gray region by a fairly sharp, slightly uneven boundary."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 32,
+   "image_id": "BASE-LSi/PH1205-1035/x10#1 - AGG0",
+   "tile_id": "r04_c01",
+   "mask_frac": 0.76,
+   "perspective": 1,
+   "caption": "The image shows a fine-grained, uniformly rough surface with a bluish metallic tint. It is brightest along a vertical edge and darkens toward the right. On the left, a dark, coarser, pitted strip with scattered bright specks runs vertically and separates from the lighter surface along a fairly sharp, slightly irregular boundary."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 32,
+   "image_id": "BASE-LSi/PH1205-1035/x10#1 - AGG0",
+   "tile_id": "r04_c01",
+   "mask_frac": 0.76,
+   "perspective": 2,
+   "caption": "The right side of the sample is a fine-grained, uniformly rough, matte surface with a bluish tint. It has a stippled, pitted texture and a bright specular glare along the left edge where it meets the border. The left side is a darker, coarser strip with an irregular, jagged boundary, scattered light speckles, and a dull, non-reflective, gritty appearance."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 32,
+   "image_id": "BASE-LSi/PH1205-1035/x10#1 - AGG0",
+   "tile_id": "r04_c01",
+   "mask_frac": 0.76,
+   "perspective": 3,
+   "caption": "The image shows a fine-grained, bluish metallic surface on the right two-thirds, with a bright, glare-like edge along its left boundary. A vertical band on the left is darker and brownish-gray, with a rough, speckled texture and small bright spots. The boundary between the two regions is fairly sharp but slightly uneven, and a darker strip runs along the far left edge."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 33,
+   "image_id": "REF-LN/PH1230-1050/x10#1 - AGG0",
+   "tile_id": "r05_c03",
+   "mask_frac": 0.838,
+   "perspective": 1,
+   "caption": "The surface has a fine, uniformly granular texture in bluish-gray tones. It is speckled with small bright specks and darker pits, and the grain looks dense and slightly noisy. A dark, irregular band along the bottom edge has an undulating upper boundary and appears to be a shadow, an edge, or an out-of-focus region."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 33,
+   "image_id": "REF-LN/PH1230-1050/x10#1 - AGG0",
+   "tile_id": "r05_c03",
+   "mask_frac": 0.838,
+   "perspective": 2,
+   "caption": "The surface has a fine, uniformly granular texture. Blue-gray speckling is scattered with tiny bright white glints, which suggests a matte, slightly rough finish with only sparse points of specular reflection. Along the bottom edge, a dark, smooth-looking band with an uneven upper boundary has little visible texture or reflectivity."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 33,
+   "image_id": "REF-LN/PH1230-1050/x10#1 - AGG0",
+   "tile_id": "r05_c03",
+   "mask_frac": 0.838,
+   "perspective": 3,
+   "caption": "The surface is mostly a uniform, finely granular blue-gray texture with scattered small bright specks. Along the bottom edge is a dark brown-black band with an uneven, wavy upper boundary, which looks like a separate region or edge of the sample and is the only distinct irregularity."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 34,
+   "image_id": "REF/PH1205-1035/x10#1 - AGG0",
+   "tile_id": "r03_c01",
+   "mask_frac": 0.955,
+   "perspective": 1,
+   "caption": "The surface has a fine, uniformly granular texture with a blue-gray tint and many small bright specks that look like light reflecting off microscopic roughness. Faint, short scratch-like marks run in random directions across it, and a dark vertical band along the left edge, with a brighter glare zone beside it, interrupts the otherwise even appearance."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 34,
+   "image_id": "REF/PH1205-1035/x10#1 - AGG0",
+   "tile_id": "r03_c01",
+   "mask_frac": 0.955,
+   "perspective": 2,
+   "caption": "The surface has a fine, uniformly grainy texture with a bluish-gray tint. It is covered in tiny bright specks and faint, short scratch-like marks, which give it a slightly rough, matte-to-satin finish that scatters light instead of reflecting it like a mirror. A brighter, glossier sheen runs along the left side next to a dark edge or border, and the rest of the surface looks evenly speckled and mottled."
+  },
+  {
+   "label": "AGG0대조",
+   "n": 34,
+   "image_id": "REF/PH1205-1035/x10#1 - AGG0",
+   "tile_id": "r03_c01",
+   "mask_frac": 0.955,
+   "perspective": 3,
+   "caption": "The surface is a bluish-gray metallic field with a fine, uniform granular texture. It is speckled with small bright specular glints and a few faint, short scratch-like lines scattered throughout. A dark, vertical band runs along the left edge, probably the sample boundary or background. Next to it is a brighter, slightly washed-out strip that looks like a lighting gradient, not a defect. Apart from these, the surface shows no distinct pits, cracks, or other large irregularities."
+  }
+ ]
+}

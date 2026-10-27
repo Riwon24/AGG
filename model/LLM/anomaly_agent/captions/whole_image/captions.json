@@ -1,0 +1,185 @@
+{
+ "model": "claude-sonnet-5-5",
+ "captions": [
+  {
+   "label": "AGG0",
+   "image_id": "BASE-LC/PH1255-1050/x10#1 - AGG0",
+   "perspective": 1,
+   "caption": "The sample is a roughly square piece with a uniformly blue, matte, finely granular surface. Brightness varies gently across it, and there are tiny bright specks but no obvious scratches, cracks, or large defects. Its edges are slightly irregular, especially along the top and bottom, and it sits against a dark, mottled background. A 1 mm scale bar is in the lower right corner."
+  },
+  {
+   "label": "AGG0",
+   "image_id": "BASE-LC/PH1255-1050/x10#1 - AGG0",
+   "perspective": 2,
+   "caption": "The square sample has a uniformly matte, finely grainy surface with a blue tint. It looks slightly rough and speckled, like a fine-grit or sandblasted finish, with only a few tiny bright specks of glint and no distinct scratches, pits, or cracks. Reflectivity is low and diffuse, with soft brightness variations across the surface from uneven lighting. The edges are slightly irregular and uneven against the dark background."
+  },
+  {
+   "label": "AGG0",
+   "image_id": "BASE-LC/PH1255-1050/x10#1 - AGG0",
+   "perspective": 3,
+   "caption": "The sample is a roughly square, blue-tinted piece with a uniform, finely grained matte texture and scattered tiny bright specks. Brightness varies gently across the surface, with lighter patches near the center and top and a darker band toward the upper right, which looks like uneven illumination rather than a defect. The edges are slightly wavy and uneven, especially along the top and bottom, and there is a small dark chip or notch at the lower-left corner and a minor nick on the left edge. No distinct cracks, scratches, or large surface defects are visible."
+  },
+  {
+   "label": "AGG0",
+   "image_id": "BASE-LSi/PH1255-1050/x10#1 - AGG0",
+   "perspective": 1,
+   "caption": "The sample is a roughly square, uniformly blue-gray piece with a fine, grainy matte texture, set against a dark, rough background. Its surface looks even overall, with only slight tonal variations, a few faint lighter and darker patches, and a slightly irregular edge. A mottled, discolored band runs along the top edge, and a 1 mm scale bar sits in the lower right corner."
+  },
+  {
+   "label": "AGG0",
+   "image_id": "BASE-LSi/PH1255-1050/x10#1 - AGG0",
+   "perspective": 2,
+   "caption": "The sample has a uniformly fine-grained, matte surface with a bluish-gray tint. It looks finely roughened or speckled, much like a bead-blasted or etched finish, and it has very low specular reflectivity. Faint lighter and darker mottled patches are visible, along with a few tiny bright specks and slightly irregular edges. There are no obvious deep scratches or cracks. A small discolored, uneven patch sits along the top edge."
+  },
+  {
+   "label": "AGG0",
+   "image_id": "BASE-LSi/PH1255-1050/x10#1 - AGG0",
+   "perspective": 3,
+   "caption": "The square sample has a fine-grained, matte blue-gray surface that is mostly uniform. There are subtle lighter and darker tonal patches, and a slightly discolored, grayish irregular area along the top edge near the center. The edges are slightly ragged, especially at the top and right, and a small dark mark sits just outside the right edge. Apart from these, no distinct scratches, cracks, or large defects are visible."
+  },
+  {
+   "label": "AGG0",
+   "image_id": "BASE-LCSI/PH1255-1050/x101 - AGG0",
+   "perspective": 1,
+   "caption": "The sample is a roughly square, uniformly blue-gray patch with a fine, matte, grainy texture. Its brightness varies slightly, with lighter edges and a darker center. Tiny bright specks are scattered across it, and the edges are slightly irregular. A dark, rough, jagged strip runs along the top edge, and the patch sits on a dark, mottled background. A 1 mm scale bar is in the lower right corner."
+  },
+  {
+   "label": "AGG0",
+   "image_id": "BASE-LCSI/PH1255-1050/x101 - AGG0",
+   "perspective": 2,
+   "caption": "The sample has a matte, uniformly fine-grained surface in a blue-gray tone. It looks like a velvety, finely roughened or frosted texture, with tiny scattered bright specks that catch the light but no broad specular reflection. The edges are slightly irregular and soft, and a darker, coarser, rougher band runs along the top edge, while the interior shows no obvious scratches, cracks, or pits."
+  },
+  {
+   "label": "AGG0",
+   "image_id": "BASE-LCSI/PH1255-1050/x101 - AGG0",
+   "perspective": 3,
+   "caption": "The sample is a roughly square, uniformly blue, matte and finely granular surface. It is slightly lighter toward the edges and slightly darker near the center. Along the top edge there is a narrow, rough, dark and irregular strip with a jagged boundary, and the left and right edges are slightly uneven. Apart from a few tiny bright specks, the interior shows no distinct defects."
+  },
+  {
+   "label": "AGG0",
+   "image_id": "BASE/PH1255-1035/x10#1 - AGG0",
+   "perspective": 1,
+   "caption": "The sample is a roughly square piece with a uniform, matte blue surface. It has a fine, granular, speckled texture and subtle lighter and darker mottling, but no obvious scratches or large defects. The edges are slightly uneven and sit against a dark, rough background. There is a small greenish discoloration on the left edge, and a 1 mm scale bar appears in the lower right corner."
+  },
+  {
+   "label": "AGG0",
+   "image_id": "BASE/PH1255-1035/x10#1 - AGG0",
+   "perspective": 2,
+   "caption": "The sample is a roughly square, blue-gray surface with a fine, uniform granular texture. It looks matte and slightly rough, like a stippled or sandblasted finish, with only faint light and dark mottling and very little specular reflectivity. The edges are slightly irregular and uneven against the dark background, and a small greenish discoloration sits along the left edge."
+  },
+  {
+   "label": "AGG0",
+   "image_id": "BASE/PH1255-1035/x10#1 - AGG0",
+   "perspective": 3,
+   "caption": "The sample is a roughly square, uniformly blue, finely grainy surface with faint lighter and darker mottling, set against a dark background. Its edges are slightly wavy and uneven, and there is a small greenish-white discolored spot on the left edge, about two-thirds of the way down. A dark, rough, irregular rim of residue also shows along the left and bottom borders."
+  },
+  {
+   "label": "AGG0",
+   "image_id": "REF-LN/PH1230-1050/x10#1 - AGG0",
+   "perspective": 1,
+   "caption": "The sample is a roughly square, uniformly blue-gray piece with a fine, matte, grainy texture, set against a dark background. The surface is mostly even, with only a few short, bright scratches in the lower left and lower right, and the edges are slightly irregular and rough. A 1 mm scale bar sits in the lower right corner."
+  },
+  {
+   "label": "AGG0",
+   "image_id": "REF-LN/PH1230-1050/x10#1 - AGG0",
+   "perspective": 2,
+   "caption": "The sample is a roughly square plate with a uniformly matte, finely grainy blue surface that looks slightly textured, like a fine-grit or bead-blasted finish, and shows almost no specular reflectivity. A few thin, bright scratches and small glints are scattered in the lower left and lower right, and the edges are slightly uneven and rough against the dark background."
+  },
+  {
+   "label": "AGG0",
+   "image_id": "REF-LN/PH1230-1050/x10#1 - AGG0",
+   "perspective": 3,
+   "caption": "The sample is a roughly square piece with a uniform, fine-grained matte blue surface and slightly uneven, wavy edges, especially along the top and right sides. A few thin, bright scratches and small scuff marks are scattered in the lower-left and lower-right areas, and there is a faint lighter band near the left edge. Otherwise there are no major defects."
+  },
+  {
+   "label": "AGG2",
+   "image_id": "REF-LN/NPH1035/x10#1 - AGG2",
+   "perspective": 1,
+   "caption": "The sample is a square, matte, blue-gray surface with a fine, uniform granular texture that looks like a sandblasted or etched finish. It is peppered with tiny dark and light specks. Broad, soft, darker cloudy patches, probably uneven lighting or reflection, show against the brighter edges. The sample sits on a dark, rough background, and the 1 mm scale bar is in the lower right."
+  },
+  {
+   "label": "AGG2",
+   "image_id": "REF-LN/NPH1035/x10#1 - AGG2",
+   "perspective": 2,
+   "caption": "The square sample has a uniformly fine-grained, matte, rough surface with a bluish-gray tint and a speckled, sandblasted look. It is scattered with tiny pits and darker specks, and its reflectivity is low and diffuse. Broad, soft darker patches appear to come from uneven lighting rather than distinct surface features, and the edges are slightly brighter. The surrounding background is dark and also finely textured."
+  },
+  {
+   "label": "AGG2",
+   "image_id": "REF-LN/NPH1035/x10#1 - AGG2",
+   "perspective": 3,
+   "caption": "The square sample has a uniformly fine-grained, matte blue-gray surface with a speckled texture. Broad, diffuse darker patches sit in the center and lower-center, most likely lighting or reflection variations. Small scattered dark specks and pits appear across the surface, and the edges look brighter. No distinct cracks, scratches, or other sharp defects are visible."
+  },
+  {
+   "label": "AGG2",
+   "image_id": "BASE-LC/NPH1050/x10#1 - AGG2",
+   "perspective": 1,
+   "caption": "The sample is a square-shaped metal piece with a uniform, matte blue-gray surface covered in a fine, granular speckled texture. The finish looks even and fairly homogeneous, with no deep scratches or large defects. The edges are slightly lighter, and a few tiny bright specks and one short fiber-like mark appear near the upper left. The sample sits against a dark, rough background, and a 1 mm scale bar is in the lower right corner."
+  },
+  {
+   "label": "AGG2",
+   "image_id": "BASE-LC/NPH1050/x10#1 - AGG2",
+   "perspective": 2,
+   "caption": "The sample has a matte, uniformly fine-grained surface with a bluish-gray tone. It looks finely roughened or sandblasted, with a dense speckle of tiny light grains and almost no specular reflectivity. A few isolated bright specks and a thin hair-like fiber are visible, but there are no obvious scratches, pits, or other large defects. The edges are slightly brighter and the sample sits against a dark, rough-textured background."
+  },
+  {
+   "label": "AGG2",
+   "image_id": "BASE-LC/NPH1050/x10#1 - AGG2",
+   "perspective": 3,
+   "caption": "The sample is a roughly square, blue-gray surface with a uniform fine-grained, matte, speckled texture and slightly brighter edges, set against dark regions on the left and right. There are no distinct defects, scratches, or regional irregularities on the surface itself, only a few tiny bright specks and a thin hair-like fiber near the upper left that look like surface debris."
+  },
+  {
+   "label": "AGG2",
+   "image_id": "BASE-LSi/NPH1035/x10#1 - AGG2",
+   "perspective": 1,
+   "caption": "The sample is a roughly square metal piece with a uniformly matte, fine-grained surface that looks blue-gray under the lighting. A broad, faint darker circular or oval shading covers the center, and the edges are slightly brighter and rougher. The surface shows only scattered tiny light specks and small grain-like flecks, with no obvious cracks or large defects. It sits against a dark, mottled background, and a 1 mm scale bar is in the lower right corner."
+  },
+  {
+   "label": "AGG2",
+   "image_id": "BASE-LSi/NPH1035/x10#1 - AGG2",
+   "perspective": 2,
+   "caption": "The sample has a uniformly fine-grained, matte, slightly rough surface with a speckled, frosted texture and little specular reflectivity. Its blue-gray tone is lighter toward the edges and darker in a broad, faint circular central region. This suggests a diffuse, etched or abraded finish, and there are no obvious deep scratches or cracks. The edges look slightly ragged and irregular, especially along the right and bottom sides."
+  },
+  {
+   "label": "AGG2",
+   "image_id": "BASE-LSi/NPH1035/x10#1 - AGG2",
+   "perspective": 3,
+   "caption": "The square sample has a uniformly fine-grained, matte blue-gray surface with a large, faint, darker circular or oval region across its center, most visible toward the right and lower edges. The edges are slightly brighter and rougher, and a few small bright specks and light flecks are scattered across the surface, with some tiny dark pits along the top edge. There are no obvious cracks or large defects."
+  },
+  {
+   "label": "AGG2",
+   "image_id": "BASE-LCSI/NPH1050/x10#1 - AGG2",
+   "perspective": 1,
+   "caption": "The sample is a roughly square, blue-gray piece with a uniformly fine, matte, granular texture, shown against a dark background. The surface is mottled with subtle light and dark speckles and has a few tiny bright specks and faint scratch marks. The edges are slightly ragged, and the upper-right corner is clipped diagonally."
+  },
+  {
+   "label": "AGG2",
+   "image_id": "BASE-LCSI/NPH1050/x10#1 - AGG2",
+   "perspective": 2,
+   "caption": "The sample is a roughly square piece with a matte, blue-gray surface. It has a fine, uniform granular texture that looks slightly rough, like a grainy or etched finish, and shows almost no specular reflectivity. A few faint scratches and tiny bright specks or particles are scattered across it, and the edges are slightly irregular, with one clipped corner at the top right."
+  },
+  {
+   "label": "AGG2",
+   "image_id": "BASE-LCSI/NPH1050/x10#1 - AGG2",
+   "perspective": 3,
+   "caption": "The sample is a roughly square, blue-gray piece with a uniformly fine, grainy matte texture against a dark background. Its top-right corner is clipped diagonally, and a few small bright specks and faint, short scratch-like marks are scattered across the surface, notably near the lower center and lower right. Subtle mottled shifts in tone appear across the surface, but there are no large defects or distinct regions."
+  },
+  {
+   "label": "AGG2",
+   "image_id": "REF/PH1180-1050/x10#1 - AGG2",
+   "perspective": 1,
+   "caption": "The sample is a roughly square, blue-gray metal piece with a uniformly fine-grained, matte, slightly speckled texture across its surface. The edges are slightly irregular and lighter, with a faint brightening along the left side and bottom, and the piece sits against a dark, coarsely textured background. No large scratches, cracks, or pits are visible."
+  },
+  {
+   "label": "AGG2",
+   "image_id": "REF/PH1180-1050/x10#1 - AGG2",
+   "perspective": 2,
+   "caption": "The sample has a uniformly fine-grained, matte surface with a slightly sandy or peppered texture. It shows low reflectivity, with only tiny scattered bright specks, and no visible scratches, pits, or cracks. The edges are slightly brighter and more irregular, which gives a faint worn or rough rim, and the center is evenly bluish-gray with soft lighting gradients."
+  },
+  {
+   "label": "AGG2",
+   "image_id": "REF/PH1180-1050/x10#1 - AGG2",
+   "perspective": 3,
+   "caption": "The sample is a roughly square, blue-gray piece with a uniformly fine, grainy matte texture across its face. Its edges are slightly rough and irregular, and they look lighter and more reflective, especially along the left side and bottom. The center has a few faint, slightly darker mottled patches and scattered tiny bright specks, but there are no distinct scratches, cracks, or other large defects."
+  }
+ ]
+}

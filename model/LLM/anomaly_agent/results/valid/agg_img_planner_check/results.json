@@ -1,0 +1,215 @@
+{
+  "args": {
+    "data_path": "<AGG_DATA_ROOT>",
+    "labels_csv": "./data/headct/labels.csv",
+    "save_path": "./results/agg_img_planner_check",
+    "max_samples": 2,
+    "qwen_model_path": "./models/qwen3_vl_4b",
+    "concurrent": 1,
+    "uncertain_score": 0.5,
+    "max_batch_size": 16,
+    "max_wait_ms": 50,
+    "attn_implementation": "sdpa",
+    "show_token_num": false,
+    "atomic_candidates_file": "atomic_candidates_agg.json",
+    "target_anomaly_definition": "Only a flat, smooth region that differs from the surrounding fine granular texture of the sample surface is anomalous (AGG). The dark background, sample edges and boundaries, lighting bands or glare, scratches, fibers, dust, and stains are not anomalous; a sample without such a flat, smooth region should be judged normal.",
+    "counterfactual_top_k": 3,
+    "super_resolution_version": "nongan",
+    "planner_model_type": "api",
+    "reflector_model_type": "api",
+    "reasoner_model_type": "api",
+    "planner_api_model": "anthropic/claude-sonnet-5-5",
+    "reflector_api_model": "anthropic/claude-sonnet-5-5",
+    "reasoner_api_model": "anthropic/claude-sonnet-5-5",
+    "image_description_model_type": "api",
+    "image_description_api_model": "anthropic/claude-sonnet-5-5",
+    "atomic_candidate_llm_model_type": "api",
+    "atomic_candidate_llm_api_model": "anthropic/claude-sonnet-5-5",
+    "api_max_concurrency": 16,
+    "use_responses_api": false,
+    "tool_call_threshold": 5,
+    "raw_to_reasoner": true,
+    "raw_to_reflector": true,
+    "normal_tolerance": 2,
+    "resize": false,
+    "unit": "image",
+    "include_candidate_sources": false,
+    "dry_run_data": false
+  },
+  "classes": [
+    "metal sample surface"
+  ],
+  "results": [
+    {
+      "cls_name": "metal sample surface",
+      "img_path": "BASE-LC/PH1255-1035/x10#1 - AGG0.jpg",
+      "gt_anomaly": 0,
+      "pred_result": "normal",
+      "pred_score": 0.0,
+      "reason": "The raw image shows a square metal sample with a uniform fine-grained blue-gray finish. The pale curved streaks look like a natural grain or flow pattern. They are smooth, continuous and spread across the whole surface, and they show no cracks, scratches, dents or contamination. The zoomed view of the upper-left region (the latest processed image) shows only a diffuse darker mottled area. It has no sharp boundary, and the granular texture is the same inside and outside it, so it is a brightness or lighting variation rather than a stain or defect. The top and bottom edges are slightly rough, but I see no distinct chips, burrs or breaks, and this looks like ordinary cut-edge roughness. The counterfactual matching was essentially neutral (average margin +0.001, with per-caption margins from -0.001 to +0.004). That is only weak advisory evidence and is not enough to override the visual findings. No hard visual_check violation was reported. The raw and zoomed images agree: no localized, verifiable anomaly. Confidence is fairly high that the sample is normal.",
+      "tool_calls": [
+        {
+          "tool_name": "image_brightness_enhancement",
+          "tool_call_id": "toolu_01QppApGykNEKZ4Mc7s3tTB8",
+          "args": {
+            "clip_limit": 3.0,
+            "image_base64": "[REDACTED]"
+          },
+          "node": "planner"
+        },
+        {
+          "tool_name": "image_zooming",
+          "tool_call_id": "toolu_012KJzwyCNVoETYruh8w5Qz8",
+          "args": {
+            "image_target": "raw",
+            "zoom_factor": 3,
+            "center_x": 0.25,
+            "center_y": 0.22,
+            "image_base64": "[REDACTED]"
+          },
+          "node": "reflector"
+        }
+      ],
+      "reasoner_judgments": [
+        {
+          "call_index": 1,
+          "result": "normal",
+          "reason": "The raw image shows a square blue-gray metal sample with a uniform fine granular texture. Pale curved streaks fan out across the surface, and the top and bottom edges are slightly rough. The streaks form a smooth, coherent flow pattern, which is typical of this kind of material (grain or rolling texture, or lighting-related sheen). They are not cracks, scratches, dents or contamination. The CLAHE-enhanced image exaggerates contrast and noise, and it brings out a darker patch in the upper left. That patch is a soft, diffuse tonal variation, also faintly visible in the raw image. It has no sharp boundary, no structural discontinuity and no change in surface texture, so it looks like an illumination or shading effect and not a defect. The edges are irregular but consistent with a cut sample. The template score of about 0.508 is barely above the decision boundary. The caption margins are only +0.009 to +0.010, and the captions themselves say no distinct cracks, dents or contamination are visible, so this is weak advisory evidence. No hard-rule violations were reported. I see no concrete, localized, verifiable defect in either the raw or the enhanced image. Confidence is moderate to high that the sample is normal.",
+          "forced": false
+        },
+        {
+          "call_index": 2,
+          "result": "normal",
+          "reason": "The raw image shows a square metal sample with a uniform fine-grained blue-gray finish. The pale curved streaks look like a natural grain or flow pattern. They are smooth, continuous and spread across the whole surface, and they show no cracks, scratches, dents or contamination. The zoomed view of the upper-left region (the latest processed image) shows only a diffuse darker mottled area. It has no sharp boundary, and the granular texture is the same inside and outside it, so it is a brightness or lighting variation rather than a stain or defect. The top and bottom edges are slightly rough, but I see no distinct chips, burrs or breaks, and this looks like ordinary cut-edge roughness. The counterfactual matching was essentially neutral (average margin +0.001, with per-caption margins from -0.001 to +0.004). That is only weak advisory evidence and is not enough to override the visual findings. No hard visual_check violation was reported. The raw and zoomed images agree: no localized, verifiable anomaly. Confidence is fairly high that the sample is normal.",
+          "forced": false
+        }
+      ],
+      "id": "BASE-LC/PH1255-1035/x10#1 - AGG0",
+      "label_value": "AGG0",
+      "template_log": {
+        "general": {
+          "margins": [
+            0.010369360446929932,
+            0.008801400661468506,
+            0.009213864803314209
+          ],
+          "scores": [
+            0.5086402735065843,
+            0.5073339745182184,
+            0.5076776171662792
+          ],
+          "avg_score": 0.507883955063694,
+          "avg_margin": 0.009461541970570883
+        },
+        "counterfactual": {
+          "num_valid": 3,
+          "num_total": 3,
+          "avg_margin": 0.0010715921719868977,
+          "avg_evidence_strength": 0.9484121402104696,
+          "avg_max_sim_anom": 0.9480804006258646,
+          "avg_max_sim_norm": 0.9470088084538778,
+          "margins": [
+            -0.0003440976142883301,
+            -0.0006511211395263672,
+            0.004209995269775391
+          ]
+        }
+      }
+    },
+    {
+      "cls_name": "metal sample surface",
+      "img_path": "BASE-LC/NPH1035/x10#1 - AGG2.jpg",
+      "gt_anomaly": 1,
+      "pred_result": "normal",
+      "pred_score": 0.0,
+      "reason": "(1) Raw image: a square, blue-toned metal sample with a fine granular, matte surface. Edges are slightly rough and lighter, and there is a small chamfer at the lower-left corner. I see no cracks, deep scratches, holes, chips, corrosion spots, or other localized structural defects. The faint lighter blotches near the center are diffuse mottling and fit the granular texture and uneven illumination. The chamfer is a clean, straight cut, which looks like an intended feature of the sample and not damage. (2) Enhanced/zoomed image: contrast enhancement (CLAHE) and zoom amplify the grain into a salt-and-pepper texture. That texture is uniform across the field, with no discrete anomalous region, line, or blemish. The brightness variation in the processed image matches the soft mottling in the raw image, so it is amplified texture and not a defect. The raw and processed views agree. (3) Counterfactual template analysis: all three captions gave slightly negative margins (average -0.007), so the result leans normal. The margins are tiny, so this is only weak support. (4) Confidence is moderate to high that the sample is normal, since no concrete, localized, verifiable defect is visible and the hard-rule conditions are not triggered.",
+      "tool_calls": [
+        {
+          "tool_name": "image_brightness_enhancement",
+          "tool_call_id": "toolu_01RzjaYHJ4y49ebKwCA5foD2",
+          "args": {
+            "clip_limit": 3.0,
+            "image_base64": "[REDACTED]"
+          },
+          "node": "planner"
+        },
+        {
+          "tool_name": "image_zooming",
+          "tool_call_id": "toolu_011769HH9wMnnDrKXt7CGcCH",
+          "args": {
+            "image_target": "raw",
+            "zoom_factor": 2.5,
+            "center_x": 0.55,
+            "center_y": 0.5,
+            "image_base64": "[REDACTED]"
+          },
+          "node": "reflector"
+        }
+      ],
+      "reasoner_judgments": [
+        {
+          "call_index": 1,
+          "result": "normal",
+          "reason": "The sample is a square blue-toned metal piece with a fine granular, matte texture. The edges are slightly lighter and rougher, and there is a chamfered lower-left corner. In the raw image, the texture looks uniform. There are no cracks, deep scratches, holes, or contamination, and no localized structural defect stands out. The CLAHE-enhanced image mostly amplifies the grain and local contrast. It shows the same pattern as the raw image: faint lighter mottling near the center and a few darker blotches. These are diffuse variations of the kind produced by illumination and surface grain, and they have no sharp boundaries. The enhancement did not reveal any new localized defect that was missing from the raw image. The chamfered corner and rough edges look like normal features of the sample's geometry. The template heuristic gave a mean anomaly score of 0.505, with margins of only +0.004 to +0.008. That is essentially at the decision boundary, so it is weak advisory evidence and not a concrete violation. Its own captions also describe the sample as largely intact and uniform. Because there is no specific, localized, visually verifiable defect, I judge the sample normal, with moderate confidence. The main uncertainty is that subtle surface irregularities may be hidden by the texture.",
+          "forced": false
+        },
+        {
+          "call_index": 2,
+          "result": "normal",
+          "reason": "(1) Raw image: a square, blue-toned metal sample with a fine granular, matte surface. Edges are slightly rough and lighter, and there is a small chamfer at the lower-left corner. I see no cracks, deep scratches, holes, chips, corrosion spots, or other localized structural defects. The faint lighter blotches near the center are diffuse mottling and fit the granular texture and uneven illumination. The chamfer is a clean, straight cut, which looks like an intended feature of the sample and not damage. (2) Enhanced/zoomed image: contrast enhancement (CLAHE) and zoom amplify the grain into a salt-and-pepper texture. That texture is uniform across the field, with no discrete anomalous region, line, or blemish. The brightness variation in the processed image matches the soft mottling in the raw image, so it is amplified texture and not a defect. The raw and processed views agree. (3) Counterfactual template analysis: all three captions gave slightly negative margins (average -0.007), so the result leans normal. The margins are tiny, so this is only weak support. (4) Confidence is moderate to high that the sample is normal, since no concrete, localized, verifiable defect is visible and the hard-rule conditions are not triggered.",
+          "forced": false
+        }
+      ],
+      "id": "BASE-LC/NPH1035/x10#1 - AGG2",
+      "label_value": "AGG2",
+      "template_log": {
+        "general": {
+          "margins": [
+            0.0037363767623901367,
+            0.007425665855407715,
+            0.0075942277908325195
+          ],
+          "scores": [
+            0.5031136070543676,
+            0.5061877389613406,
+            0.5063281852358117
+          ],
+          "avg_score": 0.5052098437505067,
+          "avg_margin": 0.006252090136210124
+        },
+        "counterfactual": {
+          "num_valid": 3,
+          "num_total": 3,
+          "avg_margin": -0.0072365403175354,
+          "avg_evidence_strength": 0.9493499398231506,
+          "avg_max_sim_anom": 0.9421133995056152,
+          "avg_max_sim_norm": 0.9493499398231506,
+          "margins": [
+            -0.007350802421569824,
+            -0.00890260934829712,
+            -0.005456209182739258
+          ]
+        }
+      }
+    }
+  ],
+  "metrics": {
+    "mean_auroc_sp": 0.5,
+    "mean_f1_sp": 0.6666666666666666,
+    "mean_ap_sp": 0.5
+  },
+  "table": [
+    [
+      "metal sample surface",
+      "50.0",
+      "66.7",
+      "50.0"
+    ],
+    [
+      "mean",
+      "50.0",
+      "66.7",
+      "50.0"
+    ]
+  ]
+}

@@ -1,0 +1,213 @@
+{
+  "args": {
+    "data_path": "<AGG_DATA_ROOT>",
+    "labels_csv": "./data/headct/labels.csv",
+    "save_path": "./results/agg_tile_smoke",
+    "max_samples": 6,
+    "qwen_model_path": "./models/qwen3_vl_4b",
+    "concurrent": 1,
+    "uncertain_score": 0.5,
+    "max_batch_size": 16,
+    "max_wait_ms": 50,
+    "attn_implementation": "sdpa",
+    "show_token_num": false,
+    "atomic_candidates_file": "atomic_candidates_agg.json",
+    "target_anomaly_definition": "Only a flat, smooth region that differs from the surrounding fine granular texture of the sample surface is anomalous (AGG). The dark background, sample edges and boundaries, lighting bands or glare, scratches, fibers, dust, and stains are not anomalous; a sample without such a flat, smooth region should be judged normal.",
+    "counterfactual_top_k": 3,
+    "super_resolution_version": "nongan",
+    "planner_model_type": "api",
+    "reflector_model_type": "api",
+    "reasoner_model_type": "api",
+    "planner_api_model": "anthropic/claude-sonnet-5-5",
+    "reflector_api_model": "anthropic/claude-sonnet-5-5",
+    "reasoner_api_model": "anthropic/claude-sonnet-5-5",
+    "image_description_model_type": "api",
+    "image_description_api_model": "anthropic/claude-sonnet-5-5",
+    "atomic_candidate_llm_model_type": "api",
+    "atomic_candidate_llm_api_model": "anthropic/claude-sonnet-5-5",
+    "api_max_concurrency": 16,
+    "use_responses_api": false,
+    "tool_call_threshold": 5,
+    "raw_to_reasoner": true,
+    "raw_to_reflector": true,
+    "normal_tolerance": 2,
+    "resize": false,
+    "unit": "tile",
+    "include_candidate_sources": false,
+    "dry_run_data": false
+  },
+  "classes": [
+    "metal sample surface"
+  ],
+  "results": [
+    {
+      "cls_name": "metal sample surface",
+      "img_path": "AGG0대조_18.png",
+      "gt_anomaly": 0,
+      "pred_result": "normal",
+      "pred_score": 0.0,
+      "reason": "The image shows a uniform, fine-grained bluish-gray granular surface with small bright speckles spread evenly across the whole view. I see no localized scratch, dent, crack, hole, stain, contamination patch, discoloration, or region with a different grain structure. The faint mottling and brightness shifts look like normal granular roughness. The counterfactual matching leans normal, with an average margin of -0.021, and all three captions matched the normal candidates more closely than the anomaly ones. The earlier analysis found no clear anomaly, and the general template score of about 0.507 is near chance. No hard visual_check violation was reported. I am fairly confident the sample is normal. The only residual uncertainty is that very subtle surface defects could be hidden by the speckled texture at this resolution.",
+      "tool_calls": [],
+      "reasoner_judgments": [
+        {
+          "call_index": 1,
+          "result": "normal",
+          "reason": "The image shows a uniform, fine-grained bluish-gray speckled texture with small bright specks spread evenly across the whole field. I see no localized cracks, scratches, dents, stains, discolorations, or breaks in the pattern. The template analysis labeled it anomalous, but its margins were tiny (+0.006 to +0.010) and its anomaly scores sat at about 0.507, essentially at the decision boundary. All three captions also described the surface as intact, uniform, and defect-free, so the keyword heuristic's positive margin is not meaningful evidence. No hard visual_check violation was reported, and no concrete, localized defect is visible. The image is consistent with a normal textured metal sample surface. Confidence is moderate to high.",
+          "forced": false
+        },
+        {
+          "call_index": 2,
+          "result": "normal",
+          "reason": "The image shows a uniform, fine-grained bluish-gray granular surface with small bright speckles spread evenly across the whole view. I see no localized scratch, dent, crack, hole, stain, contamination patch, discoloration, or region with a different grain structure. The faint mottling and brightness shifts look like normal granular roughness. The counterfactual matching leans normal, with an average margin of -0.021, and all three captions matched the normal candidates more closely than the anomaly ones. The earlier analysis found no clear anomaly, and the general template score of about 0.507 is near chance. No hard visual_check violation was reported. I am fairly confident the sample is normal. The only residual uncertainty is that very subtle surface defects could be hidden by the speckled texture at this resolution.",
+          "forced": false
+        }
+      ],
+      "id": "REF-LN/PH1255-1050/x10#1 - AGG0|r03_c05",
+      "label_value": "AGG0대조"
+    },
+    {
+      "cls_name": "metal sample surface",
+      "img_path": "AGG1표시_01.png",
+      "gt_anomaly": 1,
+      "pred_result": "normal",
+      "pred_score": 0.0,
+      "reason": "The image shows a uniform, fine-grained blue textured surface with small, evenly distributed bright specks. The only variation is soft, low-contrast mottling, for example the faint darker patches near the upper left, which fits natural tonal variation of the granular material. I found no sharp-edged discontinuities, cracks, scratches, dents, holes, stains, localized color changes, or abrupt texture breaks. The counterfactual matching leans normal (average margin -0.027), and all three captions were closer to the normal candidates. The margins are small, and the faint mottled patches match both anomaly and normal descriptions, so this evidence is only weakly discriminative. There was no hard visual_check violation. The general template score of about 0.507 sits at the decision boundary and carries little weight. Overall, nothing concrete or localized indicates a defect, and I have fairly high confidence the sample is normal.",
+      "tool_calls": [],
+      "reasoner_judgments": [
+        {
+          "call_index": 1,
+          "result": "normal",
+          "reason": "(1) The image shows a uniformly blue, finely granular surface with small bright specks and mild tonal variation. I see no localized cracks, scratches, dents, holes, stains or structural defects. The texture looks consistent across the whole frame. (2) The template analysis labeled it 'anomalous', but the margins were tiny (+0.006 to +0.010) and the anomaly scores sat near 0.5 (mean 0.507), so the signal is essentially at the decision boundary. The captions themselves describe an intact, evenly textured surface with no defects, which contradicts the keyword-based 'anomalous' prediction. No hard visual_check violations were reported, and no earlier-stage localized anomalies were identified. (3) Confidence is moderate to high that the sample is normal. The weak, non-specific score is not enough to call it anomalous under a conservative policy. (4) A high-resolution inspection or a reference normal sample would settle any remaining doubt about subtle defects, but nothing concrete suggests one.",
+          "forced": false
+        },
+        {
+          "call_index": 2,
+          "result": "normal",
+          "reason": "The image shows a uniform, fine-grained blue textured surface with small, evenly distributed bright specks. The only variation is soft, low-contrast mottling, for example the faint darker patches near the upper left, which fits natural tonal variation of the granular material. I found no sharp-edged discontinuities, cracks, scratches, dents, holes, stains, localized color changes, or abrupt texture breaks. The counterfactual matching leans normal (average margin -0.027), and all three captions were closer to the normal candidates. The margins are small, and the faint mottled patches match both anomaly and normal descriptions, so this evidence is only weakly discriminative. There was no hard visual_check violation. The general template score of about 0.507 sits at the decision boundary and carries little weight. Overall, nothing concrete or localized indicates a defect, and I have fairly high confidence the sample is normal.",
+          "forced": false
+        }
+      ],
+      "id": "BASE/PH1180-1035/x10#1  - AGG1|r01_c01",
+      "label_value": "AGG1표시"
+    },
+    {
+      "cls_name": "metal sample surface",
+      "img_path": "AGG0대조_19.png",
+      "gt_anomaly": 0,
+      "pred_result": "normal",
+      "pred_score": 0.0,
+      "reason": "The image shows a uniform, fine-grained blue-gray granular texture with evenly distributed bright speckles across the whole frame. I see no localized scratches, cracks, dents, stains, contamination, or color shifts. The slight mottling and brightness variation comes from the granular roughness of the surface itself and does not form a distinct defect region. The counterfactual analysis agrees: all three captions matched the normal candidates more closely than the anomaly candidates (average margin -0.026), and the 'anomaly' matches were only generic descriptions of faint mottling. The general template score sits at the decision threshold, so it carries little weight. No hard visual_check violation was reported. Confidence is fairly high that the sample is normal.",
+      "tool_calls": [],
+      "reasoner_judgments": [
+        {
+          "call_index": 1,
+          "result": "normal",
+          "reason": "(1) The image shows a fine, evenly distributed granular blue-gray texture with small bright speckles across the whole frame. I see no localized scratches, cracks, dents, stains, discoloration patches, or structural irregularities. The speckle density and tone look consistent from edge to edge, which fits a normal metal sample surface (a textured, glittery metallic finish). (2) The template analysis gave a mean anomaly score of 0.506, with margins of only +0.005 to +0.010. That is essentially at the decision boundary, so it carries no real discriminative weight. All three captions also describe an intact, uniform surface with no defects, which agrees with my own view. The 'anomalous' label looks like a threshold artifact of the keyword heuristic, not evidence of a defect. No hard visual_check violations were reported, and there are no other potential anomalies from earlier stages. (3) Confidence is fairly high that the surface is normal, since there is no specific, localized, visually verifiable defect. (4) A higher-resolution view or a reference normal sample would help only to rule out very subtle defects.",
+          "forced": false
+        },
+        {
+          "call_index": 2,
+          "result": "normal",
+          "reason": "The image shows a uniform, fine-grained blue-gray granular texture with evenly distributed bright speckles across the whole frame. I see no localized scratches, cracks, dents, stains, contamination, or color shifts. The slight mottling and brightness variation comes from the granular roughness of the surface itself and does not form a distinct defect region. The counterfactual analysis agrees: all three captions matched the normal candidates more closely than the anomaly candidates (average margin -0.026), and the 'anomaly' matches were only generic descriptions of faint mottling. The general template score sits at the decision threshold, so it carries little weight. No hard visual_check violation was reported. Confidence is fairly high that the sample is normal.",
+          "forced": false
+        }
+      ],
+      "id": "REF/PH1230-1035/x10#1 - AGG0|r04_c02",
+      "label_value": "AGG0대조"
+    },
+    {
+      "cls_name": "metal sample surface",
+      "img_path": "AGG1표시_02.png",
+      "gt_anomaly": 1,
+      "pred_result": "normal",
+      "pred_score": 0.0,
+      "reason": "The image shows a blue, fine-grained metal sample surface. The dark, wavy-edged strip on the left looks like the sample boundary or background, not a surface defect. The blue region has a uniform speckled texture with scattered bright specks. The few faint darker mottled patches near (130, 55) and (330, 275) are very low contrast and match normal mottling from the granular roughness. I see no scratches, cracks, pits, holes, stains, or other sharply bounded defects inside the blue region. The counterfactual template analysis leans normal (average margin -0.011), and only one caption has a slightly positive margin (+0.014), which is weak advisory evidence. No hard visual_check violation was reported. The earlier-stage findings and heuristic prompts also point to normal. My confidence is moderate to high that the sample is normal.",
+      "tool_calls": [],
+      "reasoner_judgments": [
+        {
+          "call_index": 1,
+          "result": "uncertain",
+          "reason": "(1) The image shows a blue granular metal surface with a dark, rough strip along the left edge that has a wavy boundary. A few faint darker blotches appear in the upper area. The dark strip looks like a sample edge or background (a different material or region), not a defect on the blue surface. Its boundary is smooth and continuous, with no cracks, scratches, holes, or other localized structural damage. The faint blotches are low-contrast and consistent with natural texture and illumination variation. (2) The template analysis predicted 'anomalous', but its margins were tiny (+0.003 to +0.010) and its mean score was 0.506, barely above the 0.5 decision boundary. This is weak, advisory evidence. It also seems to be driven by the left-edge strip, which is probably the sample boundary. No hard visual_check violation was reported. (3) Confidence is low to moderate. The evidence for an anomaly is weak and ambiguous, and it does not meet the bar for 'anomalous', but I cannot fully rule out subtle surface defects such as the darker blotches. (4) To resolve this, I would need a reference image of a normal sample showing whether the dark edge region is expected, plus higher-contrast views of the upper blotches.",
+          "forced": false
+        },
+        {
+          "call_index": 2,
+          "result": "normal",
+          "reason": "The image shows a blue, fine-grained metal sample surface. The dark, wavy-edged strip on the left looks like the sample boundary or background, not a surface defect. The blue region has a uniform speckled texture with scattered bright specks. The few faint darker mottled patches near (130, 55) and (330, 275) are very low contrast and match normal mottling from the granular roughness. I see no scratches, cracks, pits, holes, stains, or other sharply bounded defects inside the blue region. The counterfactual template analysis leans normal (average margin -0.011), and only one caption has a slightly positive margin (+0.014), which is weak advisory evidence. No hard visual_check violation was reported. The earlier-stage findings and heuristic prompts also point to normal. My confidence is moderate to high that the sample is normal.",
+          "forced": false
+        }
+      ],
+      "id": "BASE/PH1205-1050/x10#1 - AGG1|r02_c01",
+      "label_value": "AGG1표시"
+    },
+    {
+      "cls_name": "metal sample surface",
+      "img_path": "AGG0대조_20.png",
+      "gt_anomaly": 0,
+      "pred_result": "normal",
+      "pred_score": 0.0,
+      "reason": "(1) The surface is a uniform fine-grained blue-gray texture with scattered bright specks, typical of this metal sample. I see no scratches, cracks, dents, contamination, or deformation. The only variation is a faint, slightly darker cloudy area near the center-right (around x≈260, y≈180). It has no defined edge or sharp contrast break and merges smoothly into the natural mottling of the granular surface. (2) The counterfactual matching leans normal, with an average margin of -0.030 and all three captions closer to the normal candidates. The anomaly candidates that matched were only the vague 'faint darker mottled patches' descriptions, which describe the same subtle mottling. The heuristic prompt said to flag the sample only if the patch is sharply bounded, and it is not. The general template's positive margins were near zero, so I gave them little weight. No hard visual_check violation was reported. (3) My confidence that the sample is normal is fairly high. The only residual uncertainty is how subtle the dark patch is.",
+      "tool_calls": [],
+      "reasoner_judgments": [
+        {
+          "call_index": 1,
+          "result": "normal",
+          "reason": "(1) The image shows a fine, evenly distributed granular blue-gray texture with small bright specks. I see no localized scratches, cracks, dents, stains, or other irregularities. There is a faint slightly darker, smoother patch near the center-right, but it blends into the surrounding grain and looks like a lighting or texture variation rather than a structural defect. (2) The template analysis called the sample anomalous, but its margins were tiny (+0.008 to +0.009) and the anomaly score was about 0.507, essentially at the decision boundary. All three captions describe a normal, uniform surface, so the signal is weak and uninformative. No hard visual_check violations were reported. Under the conservative policy, a single weak advisory score is not enough to call an anomaly. (3) Confidence is moderate to high that the sample is normal. The only remaining uncertainty is the faint central patch, which would need a higher-resolution view to rule out a subtle surface defect.",
+          "forced": false
+        },
+        {
+          "call_index": 2,
+          "result": "normal",
+          "reason": "(1) The surface is a uniform fine-grained blue-gray texture with scattered bright specks, typical of this metal sample. I see no scratches, cracks, dents, contamination, or deformation. The only variation is a faint, slightly darker cloudy area near the center-right (around x≈260, y≈180). It has no defined edge or sharp contrast break and merges smoothly into the natural mottling of the granular surface. (2) The counterfactual matching leans normal, with an average margin of -0.030 and all three captions closer to the normal candidates. The anomaly candidates that matched were only the vague 'faint darker mottled patches' descriptions, which describe the same subtle mottling. The heuristic prompt said to flag the sample only if the patch is sharply bounded, and it is not. The general template's positive margins were near zero, so I gave them little weight. No hard visual_check violation was reported. (3) My confidence that the sample is normal is fairly high. The only residual uncertainty is how subtle the dark patch is.",
+          "forced": false
+        }
+      ],
+      "id": "BASE-LSi/PH1255-1035/x10#1 - AGG0|r03_c05",
+      "label_value": "AGG0대조"
+    },
+    {
+      "cls_name": "metal sample surface",
+      "img_path": "AGG1표시_03.png",
+      "gt_anomaly": 1,
+      "pred_result": "normal",
+      "pred_score": 0.0,
+      "reason": "(1) The image shows a uniform, fine-grained, speckled blue-gray metal surface with small bright specks. I see no cracks, scratches, dents, holes, contamination, or missing areas with a distinct boundary. The slightly lighter hazy patch at the upper left and the few tiny dark specks, such as the one near the center-right, look like natural brightness variation from the granular roughness, not localized defects. (2) The counterfactual matching leaned normal, with an average margin of -0.012. The two captions describing a uniform, intact surface scored closer to the normal candidates. Only the third caption, which mentions the hazy patch and dark spots, had a small positive margin of +0.015, and that is weak advisory evidence. The earlier reflector analysis also found no sharply bounded defect, and there are no hard visual_check violations. (3) Confidence is moderate to high that the image is normal. The only residual doubt is whether the dark speck is a tiny pit, but it is isolated and consistent with the surrounding texture. (4) Higher-resolution zooms of the upper-left haze and the center-right speck would settle any remaining doubt, but the current evidence does not justify an anomalous call.",
+      "tool_calls": [],
+      "reasoner_judgments": [
+        {
+          "call_index": 1,
+          "result": "normal",
+          "reason": "(1) The image shows a fine granular, speckled blue-gray metal surface. The texture is consistent across the frame, with small bright specks. I see no cracks, scratches, dents, holes, stains, or missing regions. The faint lighter hazy patch at the upper left and the few tiny dark spots are within normal variation for this kind of speckled texture. They are not localized structural defects. (2) The template analysis predicted 'anomalous', but its anomaly scores were only about 0.503-0.509 with margins near zero, which is essentially at the decision boundary. The captions themselves say the surface is mostly uniform and intact and that no clear defect is visible, so this is weak advisory evidence and not a concrete violation. No hard visual_check violations were reported. (3) Confidence is moderate to fairly high that the surface is normal. The only residual doubt is the faint hazy patch and the isolated dark specks, and neither is distinct enough to count as a defect. (4) A higher-resolution view or a reference normal sample would help rule out a subtle surface variation at the upper left.",
+          "forced": false
+        },
+        {
+          "call_index": 2,
+          "result": "normal",
+          "reason": "(1) The image shows a uniform, fine-grained, speckled blue-gray metal surface with small bright specks. I see no cracks, scratches, dents, holes, contamination, or missing areas with a distinct boundary. The slightly lighter hazy patch at the upper left and the few tiny dark specks, such as the one near the center-right, look like natural brightness variation from the granular roughness, not localized defects. (2) The counterfactual matching leaned normal, with an average margin of -0.012. The two captions describing a uniform, intact surface scored closer to the normal candidates. Only the third caption, which mentions the hazy patch and dark spots, had a small positive margin of +0.015, and that is weak advisory evidence. The earlier reflector analysis also found no sharply bounded defect, and there are no hard visual_check violations. (3) Confidence is moderate to high that the image is normal. The only residual doubt is whether the dark speck is a tiny pit, but it is isolated and consistent with the surrounding texture. (4) Higher-resolution zooms of the upper-left haze and the center-right speck would settle any remaining doubt, but the current evidence does not justify an anomalous call.",
+          "forced": false
+        }
+      ],
+      "id": "BASE/PH1205-1050/x10#1 - AGG1|r02_c05",
+      "label_value": "AGG1표시"
+    }
+  ],
+  "metrics": {
+    "mean_auroc_sp": 0.5,
+    "mean_f1_sp": 0.6666666666666666,
+    "mean_ap_sp": 0.5
+  },
+  "table": [
+    [
+      "metal sample surface",
+      "50.0",
+      "66.7",
+      "50.0"
+    ],
+    [
+      "mean",
+      "50.0",
+      "66.7",
+      "50.0"
+    ]
+  ]
+}
